@@ -85,7 +85,6 @@ constexpr uint8_t LEDDriverProps::key_led_map[];
 
 // Initialize static members
 Preonic::TimerState Preonic::timer_state_   = {};
-Preonic::TWIState Preonic::twi_state_       = {};
 uint32_t Preonic::last_activity_time_       = 0;
 volatile bool Preonic::input_event_pending_ = false;
 uint32_t Preonic::last_battery_update_      = 0;  // Initialize to 0 to force first update
@@ -342,7 +341,7 @@ void Preonic::complete_system_shutdown(void) {
   delay(5);  // Small delay
 
   // Disable FPU state preservation to prevent ~3mA power drain
-  disableFPUForSleep();
+  mcu().disableFPUForSleep();
 
   __disable_irq();  // Disable interrupts globally AFTER clearing pending
 

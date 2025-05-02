@@ -507,144 +507,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     }
   }
 
-  /**
-   * @brief Helper function to disable a specific RTC
-   * @param rtc_num RTC number (0, 1, or 2)
-   * @returns true if RTC was disabled, false if invalid RTC number
-   */
-  static bool disableRTCHelper(uint8_t rtc_num) {
-    NRF_RTC_Type *rtc;
-    IRQn_Type irq;
-    bool *enabled_state;
-    uint32_t *intenset_backup;
-    uint32_t *evten_backup;
-
-    switch (rtc_num) {
-    case 0:
-      rtc             = NRF_RTC0;
-      irq             = RTC0_IRQn;
-      enabled_state   = &timer_state_.rtc0_enabled;
-      intenset_backup = &timer_state_.rtc0_intenset;
-      evten_backup    = &timer_state_.rtc0_evten;
-      break;
-    case 1:
-      rtc             = NRF_RTC1;
-      irq             = RTC1_IRQn;
-      enabled_state   = &timer_state_.rtc1_enabled;
-      intenset_backup = &timer_state_.rtc1_intenset;
-      evten_backup    = &timer_state_.rtc1_evten;
-      break;
-    case 2:
-      rtc             = NRF_RTC2;
-      irq             = RTC2_IRQn;
-      enabled_state   = &timer_state_.rtc2_enabled;
-      intenset_backup = &timer_state_.rtc2_intenset;
-      evten_backup    = &timer_state_.rtc2_evten;
-      break;
-    default:
-      return false;
-    }
-
-    // Save current state
-    *enabled_state   = (rtc->INTENSET != 0);
-    *intenset_backup = rtc->INTENSET;
-    *evten_backup    = rtc->EVTEN;
-
-    // Clear all interrupts and events
-    rtc->INTENCLR = 0xFFFFFFFF;
-    rtc->EVTENCLR = 0xFFFFFFFF;
-
-    // Clear all event flags
-    rtc->EVENTS_TICK       = 0;
-    rtc->EVENTS_OVRFLW     = 0;
-    rtc->EVENTS_COMPARE[0] = 0;
-    rtc->EVENTS_COMPARE[1] = 0;
-    rtc->EVENTS_COMPARE[2] = 0;
-    rtc->EVENTS_COMPARE[3] = 0;
-
-    // Stop the RTC
-    rtc->TASKS_STOP = 1;
-
-    // Disable RTC interrupt
-    NVIC_DisableIRQ(irq);
-    // Clear any pending interrupts
-    NVIC_ClearPendingIRQ(irq);
-
-    return true;
-  }
-
-  /**
-   * @brief Helper function to restore a specific RTC
-   * @param rtc_num RTC number (0, 1, or 2)
-   * @returns true if RTC was restored, false if invalid RTC number
-   */
-  static bool restoreRTCHelper(uint8_t rtc_num) {
-    NRF_RTC_Type *rtc;
-    IRQn_Type irq;
-    bool enabled_state;
-    uint32_t intenset_backup;
-    uint32_t evten_backup;
-
-    switch (rtc_num) {
-    case 0:
-      rtc             = NRF_RTC0;
-      irq             = RTC0_IRQn;
-      enabled_state   = timer_state_.rtc0_enabled;
-      intenset_backup = timer_state_.rtc0_intenset;
-      evten_backup    = timer_state_.rtc0_evten;
-      break;
-    case 1:
-      rtc             = NRF_RTC1;
-      irq             = RTC1_IRQn;
-      enabled_state   = timer_state_.rtc1_enabled;
-      intenset_backup = timer_state_.rtc1_intenset;
-      evten_backup    = timer_state_.rtc1_evten;
-      break;
-    case 2:
-      rtc             = NRF_RTC2;
-      irq             = RTC2_IRQn;
-      enabled_state   = timer_state_.rtc2_enabled;
-      intenset_backup = timer_state_.rtc2_intenset;
-      evten_backup    = timer_state_.rtc2_evten;
-      break;
-    default:
-      return false;
-    }
-
-    // Restore interrupt and event configuration
-    rtc->INTENSET = intenset_backup;
-    rtc->EVTEN    = evten_backup;
-
-    if (enabled_state) {
-      // Clear any pending interrupts
-      NVIC_ClearPendingIRQ(irq);
-      // Re-enable RTC interrupt
-      NVIC_EnableIRQ(irq);
-      // Start the RTC
-      rtc->TASKS_START = 1;
-    }
-
-    return true;
-  }
-
-  /**
-   * @brief Disable all RTC functions
-   */
-  static void disableRTC() {
-    // disableRTCHelper(0);  // RTC0
-    disableRTCHelper(1);  // RTC1
-    disableRTCHelper(2);  // RTC2
-  }
 
 
-  /**
-   * @brief Restore all previously disabled RTC functions
-   */
-  static void restoreRTC() {
-    // restoreRTCHelper(0);  // RTC0
-    restoreRTCHelper(1);  // RTC1
-    restoreRTCHelper(2);  // RTC2
-  }
 
   /**
    * @brief Restore previously enabled timers and RTCs
@@ -684,56 +548,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
 
-  /**
-   * @brief Structure to store TWI state during sleep
-   */
-  struct TWIState {
-    uint32_t frequency;
-    uint32_t pin_scl;
-    uint32_t pin_sda;
-    bool enabled;
-  };
-  static TWIState twi_state_;
 
-  /**
-   * @brief Disable TWIM for sleep
-   * @details Directly forces power off for the TWIM0 peripheral using multiple methods
-   */
-  static void disableTWIForSleep() {
-    // End the Wire library connection
-    Wire.end();
-
-    // Save TWIM0 state for restoration
-    twi_state_.frequency = NRF_TWIM0->FREQUENCY;
-    twi_state_.pin_scl   = NRF_TWIM0->PSEL.SCL;
-    twi_state_.pin_sda   = NRF_TWIM0->PSEL.SDA;
-    twi_state_.enabled   = true;
-  }
-
-  /**
-   * @brief Restore TWIM after sleep
-   * @details Restores TWIM configuration if it was previously enabled
-   */
-  static void restoreTWIAfterSleep() {
-    if (!twi_state_.enabled) return;
-
-    // Restore TWIM0 configuration
-    NRF_TWIM0->FREQUENCY = twi_state_.frequency;
-    NRF_TWIM0->PSEL.SCL  = twi_state_.pin_scl;
-    NRF_TWIM0->PSEL.SDA  = twi_state_.pin_sda;
-
-    // Re-enable IRQ
-    NVIC_ClearPendingIRQ(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn);
-    NVIC_EnableIRQ(SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQn);
-
-    // Enable TWIM0
-    NRF_TWIM0->ENABLE = TWIM_ENABLE_ENABLE_Enabled << TWIM_ENABLE_ENABLE_Pos;
-
-    twi_state_.enabled = false;
-
-    // Reinitialize Wire library
-    Wire.begin();
-  }
+  
 
   /**
    * @brief Check if recovery mode keys are being held
@@ -838,12 +654,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Bluefruit hid - process all queue reports, then shut down processing
     kaleidoscope::driver::hid::bluefruit::blehid.prepareForSleep();
 
-    disableTWIForSleep();
-    disableRTC();
+    mcu().disableTWIForSleep();
+    mcu().disableRTC();
     //disableTimers(); // Disabling timers seems to make the keyscanner a little sad
 
     // Disable FPU state preservation to prevent ~3mA power drain in sleep
-    disableFPUForSleep();
+    mcu().disableFPUForSleep();
 
     sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
 
@@ -855,8 +671,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     restoreMatrixAfterSleep();
     disableColumnSensing();
     //restoreTimers();
-    restoreRTC();
-    restoreTWIAfterSleep();
+    mcu().restoreRTC();
+    mcu().restoreTWIAfterSleep();
 
     // Start processing BLE HID reports
     kaleidoscope::driver::hid::bluefruit::blehid.startReportProcessing();
@@ -879,7 +695,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   bool shouldEnterDeepSleep() {
     uint32_t now = millis();
     // Never sleep if USB is connected
-    if (mcu_.USBConfigured()) {
+    if (mcu().USBConfigured()) {
       return false;
     }
     if (keyScanner().pressedKeyswitchCount()) {
@@ -956,7 +772,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     NRF_SAADC->ENABLE = 0;
 
     // Disable FPU state preservation to prevent power drain
-    disableFPUForSleep();
+    mcu().disableFPUForSleep();
 
     // Use system off functionality to fully power down
     sd_power_system_off();
@@ -977,7 +793,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       last_battery_check_time_ = now;
 
       // Only check thresholds if running on battery
-      if (!mcu_.USBConfigured()) {
+      if (!mcu().USBConfigured()) {
         // Check for shutdown threshold
         if (isBatteryBelowShutdownThreshold(voltage_mv)) {
           battery_status_ = BatteryStatus::Shutdown;
@@ -995,12 +811,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
           ble().stopAdvertising();
 
-          disableTWIForSleep();
-          disableRTC();
+          mcu().disableTWIForSleep();
+          mcu().disableRTC();
           // disableTimers();  // Disabling timers seems to make the keyscanner a little sad
 
           // Disable FPU state preservation to prevent ~3mA power drain in sleep
-          disableFPUForSleep();
+          mcu().disableFPUForSleep();
 
           sd_power_mode_set(NRF_POWER_MODE_LOWPWR);
           // vTaskSuspendAll();
@@ -1109,40 +925,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
 
-  /**
-   * @brief Disable unused peripherals at startup
-   * @details Disables and properly cleans up UART, ADC, TWI Slave, SPI, and NFC
-   */
-  static void disableUnusedPeripherals() {
-    // Disable UART
-    NRF_UARTE0->TASKS_STOPTX  = 1;
-    NRF_UARTE0->TASKS_STOPRX  = 1;
-    NRF_UARTE0->EVENTS_TXDRDY = 0;
-    NRF_UARTE0->EVENTS_RXDRDY = 0;
-    NRF_UARTE0->ENABLE        = 0;
-
-    // Disable ADC
-    NRF_SAADC->TASKS_STOP  = 1;
-    NRF_SAADC->EVENTS_DONE = 0;
-    NRF_SAADC->ENABLE      = 0;
-
-    // Disable TWI Slave
-    NRF_TWIS0->TASKS_STOP   = 1;
-    NRF_TWIS0->EVENTS_READ  = 0;
-    NRF_TWIS0->EVENTS_WRITE = 0;
-    NRF_TWIS0->ENABLE       = 0;
-
-    // Disable SPI
-    NRF_SPI0->EVENTS_READY = 0;
-    NRF_SPI0->ENABLE       = 0;
-
-    // Disable NFC
-    NRF_NFCT->TASKS_DISABLE        = 1;
-    NRF_NFCT->EVENTS_FIELDDETECTED = 0;
-    NRF_NFCT->EVENTS_FIELDLOST     = 0;
-    NRF_NFCT->EVENTS_READY         = 0;
-  }
-
   void initializeSerialForDebugging() {
     Serial.begin(9600);
     while (!Serial) {
@@ -1171,7 +953,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Disable debug interface if not actively debugging
     NRF_CLOCK->TRACECONFIG = 0;
 
-    disableUnusedPeripherals();  // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
+    mcu().disableUnusedPeripherals();  // As of this writing, disableUnusedPeripherals() does not provide a measurable power efficiency improvement
     // Turn on the LED power
 
 
@@ -1187,7 +969,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
   Stream &serialPort() {
     return Serial;  // For now, we *always* use USB Serial
-    if (getHostConnectionMode() == MODE_USB && mcu_.USBConfigured()) {
+    if (getHostConnectionMode() == MODE_USB && mcu().USBConfigured()) {
       return Serial;
     } else {
       return ble().serialPort();
@@ -1204,25 +986,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     input_event_pending_ = true;
   }
 
-  /**
-   * @brief Disable the FPU (Floating Point Unit) state preservation before sleep
-   *
-   * This prevents the CPU from keeping the FPU powered during sleep mode.
-   * When floating point operations occur, the Cortex-M4F processor activates 
-   * the FPU hardware, which can remain partially powered during sleep unless
-   * explicitly disabled, causing a power drain of approximately 3mA.
-   */
-  static void disableFPUForSleep() {
-
-
-    // Clear FPCA bit in CONTROL register to indicate no active FP context
-    // This is the most reliable way to prevent FPU power drain
-    __set_CONTROL(__get_CONTROL() & ~(1U << 2));
-
-    // Memory barriers to ensure completion
-    __DSB();
-    __ISB();
-  }
 };
 
 }  // namespace keyboardio
