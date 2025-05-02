@@ -472,9 +472,10 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
       // Simple matrix scan without debouncing
       uint8_t pressed_count = 0;
-      bool r1c0_pressed     = false;
-      bool r1c11_pressed    = false;
-      bool r5c11_pressed    = false;
+      bool r0c9_pressed     = false;
+      bool r0c10_pressed     = false;
+      bool r0c11_pressed    = false;
+      bool r5c6_pressed    = false;
 
       for (uint8_t row = 0; row < KeyScannerProps::matrix_rows; row++) {
         digitalWrite(KeyScannerProps::matrix_row_pins[row], LOW);
@@ -485,25 +486,27 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
             pressed_count++;
 
             // Check for recovery mode keys
-            if (row == 1 && col == 0) r1c0_pressed = true;
-            if (row == 1 && col == 11) r1c11_pressed = true;
-            if (row == 5 && col == 11) r5c11_pressed = true;
+            if (row == 0 && col == 9) r0c9_pressed = true;
+            if (row == 0 && col == 10) r0c10_pressed = true;
+            if (row == 0 && col == 11) r0c11_pressed = true;
+            if (row == 5 && col == 6) r5c6_pressed = true;
           }
         }
         digitalWrite(KeyScannerProps::matrix_row_pins[row], HIGH);
       }
 
       // Check if any other keys are pressed
-      if (pressed_count > 3) {
+      if (pressed_count > 4) {
         return false;
       }
 
       // Check if required keys are held
-      if (!r1c0_pressed || !r1c11_pressed || !r5c11_pressed) {
+      if (!r0c9_pressed || !r0c10_pressed || !r0c11_pressed || !r5c6_pressed) {
         return false;
       }
 
       if (recovery_keys_held == false) {
+        enableLEDPower();
         ledDriver().setup();
         ledDriver().setBrightness(100);
         // Set all the LEDs to yellow
