@@ -117,11 +117,11 @@ class BLEBluefruit : public Base {
 
   // Handle BLE-specific key events
   kaleidoscope::EventHandlerResult onKeyEvent(kaleidoscope::KeyEvent &event);
-  
+
   // Power management methods
   static void prepareForSleep();
   static void restoreAfterSleep();
-  
+
  private:
   // Helper method to handle BLE operation keys
   kaleidoscope::EventHandlerResult handleBLEOperationKey(uint8_t keyCode);
@@ -142,7 +142,7 @@ class BLEBluefruit : public Base {
 
   // Advertising config
   static constexpr uint8_t ADVERTISING_TIMEOUT = 60;
-  
+
  private:
   static constexpr uint8_t SECURITY_MODE_ENCRYPTED = 1;
   static constexpr uint8_t SECURITY_LEVEL_MIN      = 1;
