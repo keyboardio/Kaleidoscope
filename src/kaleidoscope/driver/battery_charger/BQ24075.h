@@ -97,7 +97,7 @@ class BQ24075 : public Base<_Props> {
   bool initialized_{false};  // Track initialization state
 
   // Variables for charge fault detection
-  unsigned long last_chg_toggle_time_{0};
+  uint32_t last_chg_toggle_time_{0};
   bool last_chg_state_{false};
   uint8_t chg_toggle_count_{0};
   bool fault_detected_{false};
@@ -114,7 +114,7 @@ class BQ24075 : public Base<_Props> {
       return false;
 
     bool current_state         = digitalRead(_Props::charge_status_pin) == LOW;
-    unsigned long current_time = millis();
+    uint32_t current_time = millis();
 
     // Reset detection if no toggles for 2 seconds
     if (current_time - last_chg_toggle_time_ > 2000) {
@@ -125,7 +125,7 @@ class BQ24075 : public Base<_Props> {
     // Detect state change
     if (current_state != last_chg_state_) {
       // Calculate time between toggles
-      unsigned long toggle_interval = current_time - last_chg_toggle_time_;
+      uint32_t toggle_interval = current_time - last_chg_toggle_time_;
 
       // If toggle interval is around 500ms (2Hz), increment counter
       if (toggle_interval > 300 && toggle_interval < 700) {
@@ -181,7 +181,7 @@ class BQ24075 : public Base<_Props> {
         // Detect state change
         if (current_state != last_chg_state_) {
           // Calculate time between toggles
-          unsigned long toggle_interval = current_time - last_chg_toggle_time_;
+          uint32_t toggle_interval = current_time - last_chg_toggle_time_;
 
           // If toggle interval is around 500ms (2Hz), increment counter
           if (toggle_interval > 300 && toggle_interval < 700) {
