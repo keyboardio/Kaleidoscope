@@ -116,7 +116,7 @@ class BLEBluefruit : public Base {
 
   // Handle BLE-specific key events
   kaleidoscope::EventHandlerResult onKeyEvent(kaleidoscope::KeyEvent &event);
-  
+
  private:
   // Helper method to handle BLE operation keys
   kaleidoscope::EventHandlerResult handleBLEOperationKey(uint8_t keyCode);

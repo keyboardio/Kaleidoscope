@@ -36,24 +36,24 @@
  * the firmware is built with BLE support. 
  */
 
-#include <stdint.h>  // for uint8_t
-#include "kaleidoscope/key_defs.h"         // for Key
+#include <stdint.h>                 // for uint8_t
+#include "kaleidoscope/key_defs.h"  // for Key
 
 /// Toggle between USB and BLE modes
-constexpr uint8_t BLE_TOGGLE = 0x70;           
+constexpr uint8_t BLE_TOGGLE = 0x70;
 /// Turn off BLE and switch to USB
-constexpr uint8_t BLE_OFF = 0x71;              
+constexpr uint8_t BLE_OFF = 0x71;
 /// Start BLE pairing process for the selected device
-constexpr uint8_t BLE_PAIR = 0x72;             
+constexpr uint8_t BLE_PAIR = 0x72;
 // 0x73-0x7F reserved for future BLE operation keys
 /// Select BLE device slot 1
-constexpr uint8_t BLE_SELECT_DEVICE_1 = 0x80;  
+constexpr uint8_t BLE_SELECT_DEVICE_1 = 0x80;
 /// Select BLE device slot 2
-constexpr uint8_t BLE_SELECT_DEVICE_2 = 0x81;  
+constexpr uint8_t BLE_SELECT_DEVICE_2 = 0x81;
 /// Select BLE device slot 3
-constexpr uint8_t BLE_SELECT_DEVICE_3 = 0x82;  
+constexpr uint8_t BLE_SELECT_DEVICE_3 = 0x82;
 /// Select BLE device slot 4
-constexpr uint8_t BLE_SELECT_DEVICE_4 = 0x83;  
+constexpr uint8_t BLE_SELECT_DEVICE_4 = 0x83;
 // 0x84-0x8F reserved for future device slots
 
 
@@ -62,28 +62,28 @@ constexpr uint8_t BLE_SELECT_DEVICE_4 = 0x83;
  * Keys for basic Bluetooth Low Energy operations
  * @{
  */
- 
+
 /** Toggle between USB and BLE modes
  *
  * This key switches the keyboard between USB and BLE modes.
  * In BLE mode, the keyboard will communicate wirelessly with the paired device.
  * In USB mode, the keyboard will communicate via the USB cable.
  */
-#define Key_BLEToggle        Key(BLE_TOGGLE, KEY_FLAGS | SYNTHETIC) 
+#define Key_BLEToggle Key(BLE_TOGGLE, KEY_FLAGS | SYNTHETIC)
 
 /** Turn off BLE and switch to USB mode
  *
  * This key turns off BLE functionality and switches the keyboard to USB mode.
  * It will also stop advertising and disconnect from any currently connected device.
  */
-#define Key_BLEOff           Key(BLE_OFF, KEY_FLAGS | SYNTHETIC)
+#define Key_BLEOff Key(BLE_OFF, KEY_FLAGS | SYNTHETIC)
 
 /** Start BLE pairing process
  *
  * This key starts the BLE pairing process for the currently selected device slot.
  * The keyboard will enter discoverable mode and can be paired with a new device.
  */
-#define Key_BLEStartPairing  Key(BLE_PAIR, KEY_FLAGS | SYNTHETIC)
+#define Key_BLEStartPairing Key(BLE_PAIR, KEY_FLAGS | SYNTHETIC)
 /** @} */
 
 /**
@@ -91,7 +91,7 @@ constexpr uint8_t BLE_SELECT_DEVICE_4 = 0x83;
  * Keys for selecting specific BLE device slots
  * @{
  */
- 
+
 /** Select BLE device slot 1
  *
  * This key selects device slot 1, switches to BLE mode, and attempts
