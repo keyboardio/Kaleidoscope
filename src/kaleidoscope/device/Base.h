@@ -48,9 +48,9 @@
 #include "kaleidoscope/driver/speaker/Base.h"          // for BaseProps
 #include "kaleidoscope/driver/speaker/None.h"          // for None
 
-#include "kaleidoscope/event_handler_result.h"         // for EventHandlerResult
-#include "kaleidoscope/host_connection_status.h"       // for HostConnectionStatus
-#include "kaleidoscope/power_event.h" 		       // for PowerEvent
+#include "kaleidoscope/event_handler_result.h"    // for EventHandlerResult
+#include "kaleidoscope/host_connection_status.h"  // for HostConnectionStatus
+#include "kaleidoscope/power_event.h"             // for PowerEvent
 
 // Forward declaration needed by event handlers
 namespace kaleidoscope {
@@ -757,14 +757,14 @@ class Base {
   EventHandlerResult onLedEffectQuery(LedModeCallback callback) {
     return EventHandlerResult::OK;
   }
-  
+
   /**
    * Event handler for power events such as battery warnings, shutdown, and power source changes
    */
   EventHandlerResult onPowerEvent(kaleidoscope::PowerEvent event, uint16_t voltage_mv) {
     return EventHandlerResult::OK;
   }
-  
+
 
  protected:
   HID hid_;

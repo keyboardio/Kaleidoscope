@@ -26,10 +26,10 @@ namespace kaleidoscope {
 
 enum class PowerEvent {
   /* Battery status events */
-  BatteryWarningOn,    // Battery voltage is below warning threshold
-  BatteryWarningOff,   // Battery voltage has returned above warning threshold
-  BatteryShutdown,     // Battery voltage is critically low, system will shut down
-  
+  BatteryWarningOn,   // Battery voltage is below warning threshold
+  BatteryWarningOff,  // Battery voltage has returned above warning threshold
+  BatteryShutdown,    // Battery voltage is critically low, system will shut down
+
   /* Power source events */
   PowerSourceUSB,      // Power source changed to USB
   PowerSourceBattery,  // Power source changed to battery
