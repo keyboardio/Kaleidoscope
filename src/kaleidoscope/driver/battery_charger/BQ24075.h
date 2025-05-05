@@ -113,7 +113,7 @@ class BQ24075 : public Base<_Props> {
     if (!initialized_ || !_Props::charge_status_pin)
       return false;
 
-    bool current_state         = digitalRead(_Props::charge_status_pin) == LOW;
+    bool current_state    = digitalRead(_Props::charge_status_pin) == LOW;
     uint32_t current_time = millis();
 
     // Reset detection if no toggles for 2 seconds
