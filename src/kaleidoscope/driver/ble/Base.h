@@ -49,7 +49,7 @@ class Base {
   Stream &serialPort() {
     return noserial_;
   }
-  
+
   // Default implementation of onKeyEvent that does nothing
   EventHandlerResult onKeyEvent(KeyEvent &event) {
     return EventHandlerResult::OK;
