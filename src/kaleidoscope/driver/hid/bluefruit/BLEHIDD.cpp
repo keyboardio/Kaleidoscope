@@ -159,6 +159,14 @@ void HIDD::stopReportProcessing() {
   }
 }
 
+void HIDD::prepareForSleep() {
+  // Process all queued reports, then shut down processing
+  while (hasQueuedReports()) {
+    delay(1);
+  }
+  stopReportProcessing();
+}
+
 void HIDD::clearReportQueue() {
   if (queue_handle_) {
     DEBUG_BLE_MSG("Clearing report queue");

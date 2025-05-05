@@ -117,6 +117,11 @@ class HIDD : public BLEHidGeneric {
    */
   void stopReportProcessing();
 
+  /**
+   * Prepare for sleep by processing all queued reports, then stopping report processing
+   */
+  void prepareForSleep();
+
  private:
   static constexpr size_t QUEUE_SIZE               = 512;  // Absurdly large queue size
   static constexpr uint16_t MAX_BLE_NOTIFY_RETRIES = 500;
