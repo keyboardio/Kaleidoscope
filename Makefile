@@ -145,7 +145,7 @@ cpplint:
 shellcheck:
 	bin/check-shell-scripts.sh
 
-SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples -type f -name \*ino | xargs -n 1 dirname; fi))
+SMOKE_SKETCHES := $(sort $(shell if [ -d ./examples ]; then find ./examples ./plugins/*/examples -type f -name \*ino | xargs -n 1 dirname; fi))
 
 smoke-sketches: $(SMOKE_SKETCHES)
 	@echo "Smoke-tested all the sketches"
