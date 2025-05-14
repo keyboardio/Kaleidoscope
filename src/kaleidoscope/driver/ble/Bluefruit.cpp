@@ -82,18 +82,38 @@ void BLEBluefruit::prepareForSleep() {
 void BLEBluefruit::restoreAfterSleep() {
   DEBUG_BLE_MSG("Restoring BLE after sleep");
 
-  // Re-enable advertising auto restart
   Bluefruit.Advertising.restartOnDisconnect(true);
 
-  // Restore previous TX power
   if (Bluefruit.getTxPower() != pre_sleep_tx_power) {
     Bluefruit.setTxPower(pre_sleep_tx_power);
     DEBUG_BLE_MSG("Restored TX power to: ", pre_sleep_tx_power, "dBm");
   }
 
-  // If not connected, start advertising again
-  if (!Bluefruit.Periph.connected() && current_device_id > 0) {
+  bool connected = Bluefruit.Periph.connected();
+  bool advertising = Bluefruit.Advertising.isRunning();
+  DEBUG_BLE_MSG("After sleep: connected=", connected, ", advertising=", advertising);
+
+  if (!connected && current_device_id > 0) {
+    DEBUG_BLE_MSG("Attempting to start advertising after sleep...");
     startConnectableAdvertising();
+    if (!Bluefruit.Advertising.isRunning()) {
+      DEBUG_BLE_MSG("First advertising attempt failed, forcing cleanup and retrying...");
+      Bluefruit.Advertising.stop();
+      if (Bluefruit.connected()) {
+        uint16_t conn_handle = Bluefruit.connHandle();
+        DEBUG_BLE_MSG("Disconnecting handle: ", conn_handle);
+        Bluefruit.disconnect(conn_handle);
+      }
+      delay(100);
+      startConnectableAdvertising();
+      if (!Bluefruit.Advertising.isRunning()) {
+        DEBUG_BLE_MSG("Second advertising attempt also failed. Giving up for now.");
+      } else {
+        DEBUG_BLE_MSG("Advertising started successfully on second attempt.");
+      }
+    } else {
+      DEBUG_BLE_MSG("Advertising started successfully on first attempt.");
+    }
   }
 }
 
@@ -458,7 +478,7 @@ void BLEBluefruit::startConnectableAdvertising() {
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_LIMITED_DISC_MODE);
 
   DEBUG_BLE_MSG("Attempting to start advertising...");
-  if (!Bluefruit.Advertising.start(ADVERTISING_TIMEOUT)) {
+if (!Bluefruit.Advertising.start(ADVERTISING_TIMEOUT)) {
     DEBUG_BLE_MSG("Failed to start advertising");
   }
   DEBUG_BLE_MSG("Started connectable advertising");
