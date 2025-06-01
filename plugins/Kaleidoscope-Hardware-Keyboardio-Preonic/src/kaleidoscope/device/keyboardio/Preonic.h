@@ -117,19 +117,23 @@ class PreonicKeyScanner : public kaleidoscope::driver::keyscanner::NRF52KeyScann
    */
   static void encoderEventCallback(uint8_t encoder_index, int step) {
     if (!active_scanner_) return;
-    
+
     if (step < 0) {
       // Counter-clockwise movement
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].ccw.row, 
-                                     ENCODER_CONFIGS[encoder_index].ccw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].ccw.row, 
-                                     ENCODER_CONFIGS[encoder_index].ccw.col, false);
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].ccw.row,
+                                     ENCODER_CONFIGS[encoder_index].ccw.col,
+                                     true);
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].ccw.row,
+                                     ENCODER_CONFIGS[encoder_index].ccw.col,
+                                     false);
     } else {
       // Clockwise movement
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].cw.row, 
-                                     ENCODER_CONFIGS[encoder_index].cw.col, true);
-      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].cw.row, 
-                                     ENCODER_CONFIGS[encoder_index].cw.col, false);
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].cw.row,
+                                     ENCODER_CONFIGS[encoder_index].cw.col,
+                                     true);
+      active_scanner_->queueKeyEvent(ENCODER_CONFIGS[encoder_index].cw.row,
+                                     ENCODER_CONFIGS[encoder_index].cw.col,
+                                     false);
     }
   }
 
@@ -297,7 +301,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   static BatteryStatus battery_status_;
 
 
-
   // Battery state tracking
   static uint8_t last_battery_level_;
 
@@ -328,9 +331,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     for (uint8_t i = 0; i < KeyScannerProps::matrix_columns; i++) {
       enablePinSensing(KeyScannerProps::matrix_col_pins[i]);
     }
-    // Allow battery alerts to wake us up from sleep. 
-    // This causes the bluetooth battery level numbers to be updated 
-    // while the device is sleeping. It also prevents a battery alert 
+    // Allow battery alerts to wake us up from sleep.
+    // This causes the bluetooth battery level numbers to be updated
+    // while the device is sleeping. It also prevents a battery alert
     // from causing a continuous 300uA power drain
     enablePinSensing(BatteryGaugeProps::alert_pin);
   }
@@ -451,7 +454,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * 
    * @returns true if woken by GPIO activity
    */
-  
+
 
   /**
    * @brief Check if recovery mode keys are being held
@@ -476,9 +479,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       // Simple matrix scan without debouncing
       uint8_t pressed_count = 0;
       bool r0c9_pressed     = false;
-      bool r0c10_pressed     = false;
+      bool r0c10_pressed    = false;
       bool r0c11_pressed    = false;
-      bool r5c6_pressed    = false;
+      bool r5c6_pressed     = false;
 
       for (uint8_t row = 0; row < KeyScannerProps::matrix_rows; row++) {
         digitalWrite(KeyScannerProps::matrix_row_pins[row], LOW);
@@ -890,7 +893,6 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   static void setInputEventPending() {
     input_event_pending_ = true;
   }
-
 };
 
 }  // namespace keyboardio

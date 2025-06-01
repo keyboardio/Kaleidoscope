@@ -89,7 +89,7 @@ void BLEBluefruit::restoreAfterSleep() {
     DEBUG_BLE_MSG("Restored TX power to: ", pre_sleep_tx_power, "dBm");
   }
 
-  bool connected = Bluefruit.Periph.connected();
+  bool connected   = Bluefruit.Periph.connected();
   bool advertising = Bluefruit.Advertising.isRunning();
   DEBUG_BLE_MSG("After sleep: connected=", connected, ", advertising=", advertising);
 
@@ -478,7 +478,7 @@ void BLEBluefruit::startConnectableAdvertising() {
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_LIMITED_DISC_MODE);
 
   DEBUG_BLE_MSG("Attempting to start advertising...");
-if (!Bluefruit.Advertising.start(ADVERTISING_TIMEOUT)) {
+  if (!Bluefruit.Advertising.start(ADVERTISING_TIMEOUT)) {
     DEBUG_BLE_MSG("Failed to start advertising");
   }
   DEBUG_BLE_MSG("Started connectable advertising");
