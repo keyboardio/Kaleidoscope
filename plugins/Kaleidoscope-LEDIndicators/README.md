@@ -81,6 +81,3 @@ Each effect can be configured with:
 
 * [Kaleidoscope-LEDControl](https://github.com/keyboardio/Kaleidoscope-LEDControl)
 
-## Further reading
-
-The [example](https://github.com/keyboardio/Kaleidoscope/blob/master/plugins/Kaleidoscope-LEDIndicators/examples) directory contains a fully working demonstration.
