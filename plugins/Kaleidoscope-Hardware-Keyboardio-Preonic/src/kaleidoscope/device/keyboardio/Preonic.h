@@ -733,17 +733,16 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
           }
 
 
-        }
-        // Check for warning threshold
-        else if (isBatteryBelowWarningThreshold(voltage_mv)) {
+        } else if (isBatteryBelowWarningThreshold(voltage_mv)) {
+          // Check for warning threshold
+
           if (battery_status_ != BatteryStatus::Warning) {
             battery_status_ = BatteryStatus::Warning;
             // Reset warning timing to ensure immediate warning
             last_warning_time_ = now - WARNING_INTERVAL_MS;
           }
-        }
-        // Normal operation
-        else {
+        } else { // Normal operation
+
           battery_status_ = BatteryStatus::Normal;
           warning_active_ = false;
         }
