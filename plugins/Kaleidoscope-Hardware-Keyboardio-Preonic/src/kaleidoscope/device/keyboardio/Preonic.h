@@ -741,7 +741,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
             // Reset warning timing to ensure immediate warning
             last_warning_time_ = now - WARNING_INTERVAL_MS;
           }
-        } else { // Normal operation
+        } else {  // Normal operation
 
           battery_status_ = BatteryStatus::Normal;
           warning_active_ = false;

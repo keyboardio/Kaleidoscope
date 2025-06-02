@@ -136,16 +136,16 @@ void Preonic::complete_system_shutdown(void) {
   // Shutdown sequence - order is important
   shutdownApplicationLayer();
   shutdownBLEStack();
-  
+
   // Use SoftDevice services while still available
   uint32_t sd_result = shutdownSoftDeviceServices();
-  
+
   // After SoftDevice is disabled, use nrfx drivers and direct register access
   shutdownPeripherals();
   configureGPIOForPowerOff();
   clearAllNVICInterrupts();
   shutdownClocks();
-  
+
   // Final system power off
   enterSystemOff();
 }
@@ -173,17 +173,17 @@ void Preonic::shutdownBLEStack() {
  */
 uint32_t Preonic::shutdownSoftDeviceServices() {
   uint32_t err_code;
-  
+
   // Configure RAM retention while SoftDevice is still active
-  uint32_t ram_clr_mask = 0xFFFFFFFF; // Clear all sections possible
-  sd_power_ram_power_clr(0, ram_clr_mask); // Ignore errors
-  
+  uint32_t ram_clr_mask = 0xFFFFFFFF;       // Clear all sections possible
+  sd_power_ram_power_clr(0, ram_clr_mask);  // Ignore errors
+
   // Disable SoftDevice - LAST SoftDevice API call
   err_code = sd_softdevice_disable();
   if (err_code != NRF_SUCCESS) {
-    NVIC_SystemReset(); // Critical failure, reset the system
+    NVIC_SystemReset();  // Critical failure, reset the system
   }
-  
+
   return err_code;
 }
 
@@ -192,7 +192,7 @@ uint32_t Preonic::shutdownSoftDeviceServices() {
  */
 void Preonic::shutdownPeripherals() {
   shutdownCommunicationPeripherals();
-  shutdownAnalogPeripherals(); 
+  shutdownAnalogPeripherals();
   shutdownTimerPeripherals();
   shutdownAudioPeripherals();
   shutdownUSBPeripherals();
@@ -205,48 +205,48 @@ void Preonic::shutdownPeripherals() {
 void Preonic::shutdownCommunicationPeripherals() {
   // For system shutdown, direct register access is actually the most reliable approach
   // because it doesn't depend on driver initialization state or build configuration
-  
+
   // Helper lambda for UARTE shutdown
-  auto shutdownUARTE = [](NRF_UARTE_Type* uarte) {
+  auto shutdownUARTE = [](NRF_UARTE_Type *uarte) {
     uarte->TASKS_STOPTX = 1;
     uarte->TASKS_STOPRX = 1;
-    uarte->ENABLE = 0;
-    uarte->INTENCLR = 0xFFFFFFFF;
+    uarte->ENABLE       = 0;
+    uarte->INTENCLR     = 0xFFFFFFFF;
   };
-  
+
   // Helper lambda for legacy UART shutdown
-  auto shutdownUART = [](NRF_UART_Type* uart) {
+  auto shutdownUART = [](NRF_UART_Type *uart) {
     uart->TASKS_STOPTX = 1;
     uart->TASKS_STOPRX = 1;
-    uart->ENABLE = 0;
-    uart->INTENCLR = 0xFFFFFFFF;
+    uart->ENABLE       = 0;
+    uart->INTENCLR     = 0xFFFFFFFF;
   };
-  
+
   // Disable UARTs - stop tasks first, then disable, then clear interrupts
   shutdownUARTE(NRF_UARTE0);
   shutdownUARTE(NRF_UARTE1);
   shutdownUART(NRF_UART0);
-  
+
   // Helper lambda for SPI shutdown
-  auto shutdownSPIM = [](NRF_SPIM_Type* spim) {
+  auto shutdownSPIM = [](NRF_SPIM_Type *spim) {
     spim->TASKS_STOP = 1;
-    spim->ENABLE = 0;
-    spim->INTENCLR = 0xFFFFFFFF;
+    spim->ENABLE     = 0;
+    spim->INTENCLR   = 0xFFFFFFFF;
   };
-  
+
   // Disable SPI - stop tasks first for proper shutdown
   shutdownSPIM(NRF_SPIM0);
   shutdownSPIM(NRF_SPIM1);
   shutdownSPIM(NRF_SPIM2);
   shutdownSPIM(NRF_SPIM3);
-  
+
   // Helper lambda for I2C/TWI shutdown
-  auto shutdownTWIM = [](NRF_TWIM_Type* twim) {
+  auto shutdownTWIM = [](NRF_TWIM_Type *twim) {
     twim->TASKS_STOP = 1;
-    twim->ENABLE = 0;
-    twim->INTENCLR = 0xFFFFFFFF;
+    twim->ENABLE     = 0;
+    twim->INTENCLR   = 0xFFFFFFFF;
   };
-  
+
   // Disable I2C/TWI - stop tasks first
   shutdownTWIM(NRF_TWIM0);
   shutdownTWIM(NRF_TWIM1);
@@ -257,41 +257,41 @@ void Preonic::shutdownCommunicationPeripherals() {
  */
 void Preonic::shutdownTimerPeripherals() {
   // Follow Nordic's recommended shutdown sequence: stop tasks, clear events, disable interrupts, then disable
-  
+
   // Helper lambda for PWM shutdown to reduce code duplication
-  auto shutdownPWM = [](NRF_PWM_Type* pwm) {
+  auto shutdownPWM = [](NRF_PWM_Type *pwm) {
     pwm->TASKS_STOP = 1;
-    pwm->ENABLE = 0;
-    pwm->INTENCLR = 0xFFFFFFFF;
+    pwm->ENABLE     = 0;
+    pwm->INTENCLR   = 0xFFFFFFFF;
   };
-  
+
   // Disable PWM instances
   shutdownPWM(NRF_PWM0);
   shutdownPWM(NRF_PWM1);
   shutdownPWM(NRF_PWM2);
   shutdownPWM(NRF_PWM3);
-  
-  // Helper lambda for Timer shutdown 
-  auto shutdownTimer = [](NRF_TIMER_Type* timer) {
-    timer->TASKS_STOP = 1;
+
+  // Helper lambda for Timer shutdown
+  auto shutdownTimer = [](NRF_TIMER_Type *timer) {
+    timer->TASKS_STOP  = 1;
     timer->TASKS_CLEAR = 1;
-    timer->INTENCLR = 0xFFFFFFFF;
+    timer->INTENCLR    = 0xFFFFFFFF;
   };
-  
+
   // Disable Timers - proper shutdown sequence
   shutdownTimer(NRF_TIMER0);
   shutdownTimer(NRF_TIMER1);
   shutdownTimer(NRF_TIMER2);
   shutdownTimer(NRF_TIMER3);
   shutdownTimer(NRF_TIMER4);
-  
+
   // Helper lambda for RTC shutdown
-  auto shutdownRTC = [](NRF_RTC_Type* rtc) {
+  auto shutdownRTC = [](NRF_RTC_Type *rtc) {
     rtc->TASKS_STOP = 1;
-    rtc->EVTENCLR = 0xFFFFFFFF;
-    rtc->INTENCLR = 0xFFFFFFFF;
+    rtc->EVTENCLR   = 0xFFFFFFFF;
+    rtc->INTENCLR   = 0xFFFFFFFF;
   };
-  
+
   // Disable RTCs - proper shutdown sequence
   shutdownRTC(NRF_RTC0);
   shutdownRTC(NRF_RTC1);
@@ -303,34 +303,34 @@ void Preonic::shutdownTimerPeripherals() {
  */
 void Preonic::shutdownAnalogPeripherals() {
   // Use proper shutdown sequence for all analog peripherals and sensors
-  
+
   // Disable QDEC (sensor peripheral that may use GPIO)
   NRF_QDEC->TASKS_STOP = 1;
-  NRF_QDEC->ENABLE = 0;
-  NRF_QDEC->INTENCLR = 0xFFFFFFFF;
-  
+  NRF_QDEC->ENABLE     = 0;
+  NRF_QDEC->INTENCLR   = 0xFFFFFFFF;
+
   // Disable ADC/SAADC
   NRF_SAADC->TASKS_STOP = 1;
-  NRF_SAADC->ENABLE = 0;
-  NRF_SAADC->INTENCLR = 0xFFFFFFFF;
-  
+  NRF_SAADC->ENABLE     = 0;
+  NRF_SAADC->INTENCLR   = 0xFFFFFFFF;
+
   // Disable COMP
   NRF_COMP->TASKS_STOP = 1;
-  NRF_COMP->ENABLE = 0;
-  NRF_COMP->INTENCLR = 0xFFFFFFFF;
-  
-  // Disable LPCOMP  
+  NRF_COMP->ENABLE     = 0;
+  NRF_COMP->INTENCLR   = 0xFFFFFFFF;
+
+  // Disable LPCOMP
   NRF_LPCOMP->TASKS_STOP = 1;
-  NRF_LPCOMP->ENABLE = 0;
-  NRF_LPCOMP->INTENCLR = 0xFFFFFFFF;
-  
+  NRF_LPCOMP->ENABLE     = 0;
+  NRF_LPCOMP->INTENCLR   = 0xFFFFFFFF;
+
   // Disable temperature sensor (no ENABLE register)
   NRF_TEMP->TASKS_STOP = 1;
-  NRF_TEMP->INTENCLR = 0xFFFFFFFF;
-  
+  NRF_TEMP->INTENCLR   = 0xFFFFFFFF;
+
   // Disable RNG (no ENABLE register)
   NRF_RNG->TASKS_STOP = 1;
-  NRF_RNG->INTENCLR = 0xFFFFFFFF;
+  NRF_RNG->INTENCLR   = 0xFFFFFFFF;
 }
 
 /**
@@ -338,11 +338,11 @@ void Preonic::shutdownAnalogPeripherals() {
  */
 void Preonic::shutdownAudioPeripherals() {
   // Disable I2S - direct register access for safety
-  NRF_I2S->ENABLE = 0;
+  NRF_I2S->ENABLE   = 0;
   NRF_I2S->INTENCLR = 0xFFFFFFFF;
-  
+
   // Disable PDM - direct register access for safety
-  NRF_PDM->ENABLE = 0;
+  NRF_PDM->ENABLE   = 0;
   NRF_PDM->INTENCLR = 0xFFFFFFFF;
 }
 
@@ -352,9 +352,9 @@ void Preonic::shutdownAudioPeripherals() {
 void Preonic::shutdownUSBPeripherals() {
   // Disable USB device with proper shutdown sequence
   NRF_USBD->USBPULLUP = 0;
-  NRF_USBD->ENABLE = 0;
-  NRF_USBD->INTENCLR = 0xFFFFFFFF;
-  
+  NRF_USBD->ENABLE    = 0;
+  NRF_USBD->INTENCLR  = 0xFFFFFFFF;
+
   // Disable USB power detection interrupts
   NRF_POWER->INTENCLR = (POWER_INTENCLR_USBDETECTED_Clear << POWER_INTENCLR_USBDETECTED_Pos) |
                         (POWER_INTENCLR_USBREMOVED_Clear << POWER_INTENCLR_USBREMOVED_Pos) |
@@ -367,23 +367,23 @@ void Preonic::shutdownUSBPeripherals() {
 void Preonic::shutdownGPIOAndInterrupts() {
   // Disable NFC/NFCT
   NRF_NFCT->TASKS_DISABLE = 1;
-  NRF_NFCT->INTENCLR = 0xFFFFFFFF;
-  
+  NRF_NFCT->INTENCLR      = 0xFFFFFFFF;
+
   // Disable GPIOTE hardware directly (should be after sensor peripherals that might use it)
   NRF_GPIOTE->INTENCLR = 0xFFFFFFFF;
   for (int i = 0; i < 8; i++) {
     NRF_GPIOTE->EVENTS_IN[i] = 0;
-    NRF_GPIOTE->CONFIG[i] = 0;
+    NRF_GPIOTE->CONFIG[i]    = 0;
   }
   NRF_GPIOTE->EVENTS_PORT = 0;
-  
+
   // Disable PPI - direct register access
   NRF_PPI->CHENCLR = 0xFFFFFFFF;
   for (int i = 0; i < 16; i++) {
     NRF_PPI->CH[i].EEP = 0;
     NRF_PPI->CH[i].TEP = 0;
   }
-  
+
   // Disable EGU - direct register access (no nrfx disable API)
   NRF_EGU0->INTENCLR = 0xFFFFFFFF;
   NRF_EGU1->INTENCLR = 0xFFFFFFFF;
@@ -399,8 +399,8 @@ void Preonic::shutdownGPIOAndInterrupts() {
 void Preonic::clearAllNVICInterrupts() {
   // Clear all pending interrupts in all NVIC banks
   for (int i = 0; i < 8; i++) {
-    NVIC->ICER[i] = 0xFFFFFFFF; // Disable all interrupts
-    NVIC->ICPR[i] = 0xFFFFFFFF; // Clear all pending interrupts
+    NVIC->ICER[i] = 0xFFFFFFFF;  // Disable all interrupts
+    NVIC->ICPR[i] = 0xFFFFFFFF;  // Clear all pending interrupts
   }
 }
 
@@ -410,22 +410,22 @@ void Preonic::clearAllNVICInterrupts() {
 void Preonic::configureGPIOForPowerOff() {
   // Disable LED power
   disableLEDPower();
-  
+
   // Configuration for minimal power consumption
-  const uint32_t low_power_pin_config = 
+  const uint32_t low_power_pin_config =
     (GPIO_PIN_CNF_DIR_Input << GPIO_PIN_CNF_DIR_Pos) |
     (GPIO_PIN_CNF_INPUT_Disconnect << GPIO_PIN_CNF_INPUT_Pos) |
     (GPIO_PIN_CNF_PULL_Disabled << GPIO_PIN_CNF_PULL_Pos) |
     (GPIO_PIN_CNF_DRIVE_S0S1 << GPIO_PIN_CNF_DRIVE_Pos) |
     (GPIO_PIN_CNF_SENSE_Disabled << GPIO_PIN_CNF_SENSE_Pos);
-  
+
   // Configure all P0 GPIO pins to minimize power consumption
   // Skip pins 0, 1, and 18 (likely used for crystal/debug)
   for (int i = 2; i < 32; i++) {
     if (i == 18) continue;
     NRF_P0->PIN_CNF[i] = low_power_pin_config;
   }
-  
+
   // Configure all P1 pins
   for (int i = 0; i < 16; i++) {
     NRF_P1->PIN_CNF[i] = low_power_pin_config;
@@ -439,15 +439,15 @@ void Preonic::shutdownClocks() {
   // Manual clock shutdown - most reliable for system shutdown
   // Stop LFCLK first
   NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-  NRF_CLOCK->LFCLKSRC = 0;
-  NRF_CLOCK->TASKS_LFCLKSTOP = 1;
-  
+  NRF_CLOCK->LFCLKSRC            = 0;
+  NRF_CLOCK->TASKS_LFCLKSTOP     = 1;
+
   // Wait for LFCLK to stop
   while ((NRF_CLOCK->LFCLKSTAT & CLOCK_LFCLKSTAT_STATE_Msk) != 0);
-  
+
   // Stop HFCLK
   NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
-  NRF_CLOCK->TASKS_HFCLKSTOP = 1;
+  NRF_CLOCK->TASKS_HFCLKSTOP     = 1;
 }
 
 /**
@@ -456,26 +456,26 @@ void Preonic::shutdownClocks() {
 void Preonic::enterSystemOff() {
   // Disable FPU state preservation to prevent power drain
   mcu().disableFPUForSleep();
-  
+
   // Disable instruction cache
   NRF_NVMC->ICACHECNF &= ~NVMC_ICACHECNF_CACHEEN_Msk;
-  
+
   // Configure power settings
-  NRF_POWER->DCDCEN = 1; // Enable DC/DC converter for efficiency
-  NRF_POWER->POFCON = 0; // Disable power failure comparator
-  
+  NRF_POWER->DCDCEN = 1;  // Enable DC/DC converter for efficiency
+  NRF_POWER->POFCON = 0;  // Disable power failure comparator
+
   // Clear reset reasons
   NRF_POWER->RESETREAS = 0xFFFFFFFF;
-  
+
   // Disable interrupts globally
   __disable_irq();
-  
+
   // Direct system power off (SoftDevice already disabled)
   NRF_POWER->SYSTEMOFF = 1;
-  
+
   // Should never reach here
   while (1) {
-    __WFI(); // Wait for interrupt (low power state)
+    __WFI();  // Wait for interrupt (low power state)
   }
 }
 
