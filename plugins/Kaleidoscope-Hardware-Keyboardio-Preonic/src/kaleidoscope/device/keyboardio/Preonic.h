@@ -888,6 +888,23 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
   void complete_system_shutdown(void);
 
+ private:
+  // System shutdown helper functions
+  void shutdownApplicationLayer();
+  void shutdownBLEStack();
+  uint32_t shutdownSoftDeviceServices();
+  void shutdownPeripherals();
+  void shutdownCommunicationPeripherals();
+  void shutdownTimerPeripherals();
+  void shutdownAnalogPeripherals();
+  void shutdownAudioPeripherals();
+  void shutdownUSBPeripherals();
+  void shutdownGPIOAndInterrupts();
+  void shutdownClocks();
+  void clearAllNVICInterrupts();
+  void configureGPIOForPowerOff();
+  void enterSystemOff();
+
  public:
   static void setInputEventPending() {
     input_event_pending_ = true;
