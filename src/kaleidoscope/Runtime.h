@@ -216,6 +216,18 @@ class Runtime_ {
     return key;
   }
 
+  /** Trigger a power-related event
+   *
+   * This method is called to notify plugins about power-related events like
+   * battery warnings, shutdown, or power source changes.
+   * 
+   * @param event The type of power event that occurred
+   * @param voltage_mv The current battery voltage in millivolts
+   */
+  void handlePowerEvent(PowerEvent event, uint16_t voltage_mv = 0) {
+    kaleidoscope::Hooks::onPowerEvent(event, voltage_mv);
+  }
+
  private:
   static uint32_t millis_at_cycle_start_;
   static KeyAddr last_addr_toggled_on_;
