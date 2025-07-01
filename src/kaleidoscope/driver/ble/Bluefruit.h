@@ -169,6 +169,12 @@ class BLEBluefruit : public Base {
   static void setSlotSpecificAddress(uint8_t slot_id);
   static void unbond();
   static void disconnectAndUnbond();
+
+  // Ensure safe disconnect waits for pending bond writes to flush
+  void scheduleSafeDisconnect();
+
+  static volatile uint32_t bond_write_deadline_ms;
+  static volatile bool bond_write_pending;
 };
 
 }  // namespace ble
