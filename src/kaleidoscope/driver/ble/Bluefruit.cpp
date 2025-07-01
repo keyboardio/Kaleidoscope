@@ -45,6 +45,9 @@ BLEDis BLEBluefruit::bledis;
 BLEBas BLEBluefruit::blebas;
 BLEUartWrapper BLEBluefruit::bleuart;
 
+// Add static variable to track sleep start time
+static uint32_t sleep_start_time = 0;
+
 /**
  * @brief Prepare BLE for sleep mode to conserve power
  * 
@@ -56,6 +59,9 @@ BLEUartWrapper BLEBluefruit::bleuart;
  */
 void BLEBluefruit::prepareForSleep() {
   DEBUG_BLE_MSG("Preparing BLE for sleep");
+
+  // Record when we're entering sleep
+  sleep_start_time = millis();
 
   // Disable advertising auto restart
   Bluefruit.Advertising.restartOnDisconnect(false);
@@ -78,22 +84,97 @@ void BLEBluefruit::prepareForSleep() {
  * 1. Re-enables advertising auto restart on disconnect
  * 2. Restores previous TX power level
  * 3. If not connected, restarts connectable advertising
+ * 4. Forces advertising restart if we've been asleep for extended period
  */
 void BLEBluefruit::restoreAfterSleep() {
   DEBUG_BLE_MSG("Restoring BLE after sleep");
 
-  // Re-enable advertising auto restart
   Bluefruit.Advertising.restartOnDisconnect(true);
 
-  // Restore previous TX power
   if (Bluefruit.getTxPower() != pre_sleep_tx_power) {
     Bluefruit.setTxPower(pre_sleep_tx_power);
     DEBUG_BLE_MSG("Restored TX power to: ", pre_sleep_tx_power, "dBm");
   }
 
-  // If not connected, start advertising again
-  if (!Bluefruit.Periph.connected() && current_device_id > 0) {
+  bool connected   = Bluefruit.Periph.connected();
+  bool advertising = Bluefruit.Advertising.isRunning();
+  uint32_t sleep_duration = millis() - sleep_start_time;
+  bool connection_is_stale = false;
+  
+  // If we think we're connected but slept for a long time, validate the connection
+  if (connected && sleep_duration > 900000) { // 15 minutes
+    DEBUG_BLE_MSG("Long sleep detected, validating connection...");
+    
+    // Try to get connection object and validate it
+    if (Bluefruit.connected()) {
+      uint16_t conn_handle = Bluefruit.connHandle();
+      BLEConnection *conn = Bluefruit.Connection(conn_handle);
+      
+      if (conn && conn->connected()) {
+        // Try to get RSSI - this will fail if connection is stale
+        int8_t rssi = conn->getRssi();
+        
+        // RSSI of 127 often indicates invalid/stale connection
+        // RSSI worse than -90 dBm likely indicates connection issues
+        if (rssi == 127 || rssi < -90) {
+          DEBUG_BLE_MSG("Connection validation failed: invalid RSSI=", rssi);
+          connection_is_stale = true;
+        } else {
+          // Try to get connection parameters - if this fails, connection is likely dead
+          uint16_t interval = conn->getConnectionInterval();
+          if (interval == 0 || interval > 1000) { // Sanity check on interval
+            DEBUG_BLE_MSG("Connection validation failed: invalid interval=", interval);
+            connection_is_stale = true;
+          } else {
+            DEBUG_BLE_MSG("Connection validated: RSSI=", rssi, "dBm, interval=", interval);
+          }
+        }
+      } else {
+        DEBUG_BLE_MSG("Connection validation failed: could not get connection object");
+        connection_is_stale = true;
+      }
+    } else {
+      DEBUG_BLE_MSG("Connection validation failed: Bluefruit.connected() returned false");
+      connection_is_stale = true;
+    }
+  }
+  
+  bool force_advertising = connection_is_stale;
+  
+  DEBUG_BLE_MSG("After sleep: connected=", connected, ", advertising=", advertising, ", sleep_duration=", sleep_duration, "ms, stale=", connection_is_stale);
+
+  if ((!connected && current_device_id > 0) || force_advertising) {
+    if (force_advertising && connected) {
+      DEBUG_BLE_MSG("Forcing disconnect due to stale connection");
+      // Disconnect the stale connection
+      if (Bluefruit.connected()) {
+        uint16_t conn_handle = Bluefruit.connHandle();
+        DEBUG_BLE_MSG("Disconnecting stale handle: ", conn_handle);
+        Bluefruit.disconnect(conn_handle);
+      }
+      delay(100); // Allow disconnect to complete
+    }
+    
+    DEBUG_BLE_MSG("Attempting to start advertising after sleep...");
     startConnectableAdvertising();
+    if (!Bluefruit.Advertising.isRunning()) {
+      DEBUG_BLE_MSG("First advertising attempt failed, forcing cleanup and retrying...");
+      Bluefruit.Advertising.stop();
+      if (Bluefruit.connected()) {
+        uint16_t conn_handle = Bluefruit.connHandle();
+        DEBUG_BLE_MSG("Disconnecting handle: ", conn_handle);
+        Bluefruit.disconnect(conn_handle);
+      }
+      delay(100);
+      startConnectableAdvertising();
+      if (!Bluefruit.Advertising.isRunning()) {
+        DEBUG_BLE_MSG("Second advertising attempt also failed. Giving up for now.");
+      } else {
+        DEBUG_BLE_MSG("Advertising started successfully on second attempt.");
+      }
+    } else {
+      DEBUG_BLE_MSG("Advertising started successfully on first attempt.");
+    }
   }
 }
 
