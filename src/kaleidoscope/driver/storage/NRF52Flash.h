@@ -79,18 +79,113 @@ class StorageFileManager {
     snprintf(path_buffer, buffer_size, "%s%d%s", PAGE_FILE_PREFIX, page_index + 1, PAGE_FILE_SUFFIX);
   }
 
+  // Lightweight integrity scan: walk root (and its first-level sub-dirs) and attempt a 1-byte read from each file.
+  static bool quickHealthCheck() {
+    using Adafruit_LittleFS_Namespace::File;
+    using Adafruit_LittleFS_Namespace::FILE_O_READ;
+    const uint8_t MAX_DEPTH = 2;
+
+    struct StackItem {
+      char path[64];
+      uint8_t depth;
+    };
+    StackItem stack[8];
+    uint8_t sp = 0;
+    snprintf(stack[sp].path, sizeof(stack[sp].path), "/");
+    stack[sp].depth = 0;
+
+    while (true) {
+      // Pop
+      char cwd[64];
+      uint8_t depth;
+      snprintf(cwd, sizeof(cwd), "%s", stack[sp].path);
+      depth = stack[sp].depth;
+      if (sp == 0) {
+        // when about to pop last element we will clear stack later
+      }
+      if (sp > 0) {
+        sp--;
+      } else {
+        /* stack empty */
+      }
+
+      File dir(cwd, FILE_O_READ, InternalFS);
+      if (!dir) return false;
+      File item(InternalFS);
+      while ((item = dir.openNextFile(FILE_O_READ))) {
+        if (!item) {
+          dir.close();
+          return false;
+        }
+        if (item.isDirectory()) {
+          if (depth < MAX_DEPTH) {
+            // push child directory onto stack
+            if (sp < sizeof(stack) / sizeof(stack[0]) - 1) {
+              sp++;
+              if (strcmp(cwd, "/") == 0)
+                snprintf(stack[sp].path, sizeof(stack[sp].path), "/%s", item.name());
+              else
+                snprintf(stack[sp].path, sizeof(stack[sp].path), "%s/%s", cwd, item.name());
+              stack[sp].depth = depth + 1;
+            }
+          }
+        } else {
+          // Attempt to read 1 byte if file not empty
+          if (item.size() > 0) {
+            uint8_t b;
+            item.seek(0);
+            if (item.read(&b, 1) != 1) {
+              item.close();
+              dir.close();
+              return false;
+            }
+          }
+        }
+        item.close();
+      }
+      dir.close();
+      if (sp == 0) break;  // stack empty
+    }
+    return true;
+  }
+
   // Initialize the filesystem
   static bool initFilesystem() {
+    STORAGE_DEBUG_TRACE("Initializing filesystem");
     // Try to shut down filesystem first in case it's in a bad state
     InternalFS.end();
 
-    // Reinitialize the filesystem
-    if (!InternalFS.begin()) {
-      STORAGE_DEBUG_TRACE("Failed to initialize filesystem");
+    auto lowLevelFormat = []() -> bool {
+      STORAGE_DEBUG_TRACE("Performing low-level erase & format");
+      InternalFS.end();
+      if (!InternalFS.erase()) {
+        STORAGE_DEBUG_TRACE("Low-level erase FAILED");
+        return false;
+      }
+      if (!InternalFS.format()) {
+        STORAGE_DEBUG_TRACE("Filesystem format FAILED");
+        return false;
+      }
+      return InternalFS.begin();
+    };
+
+    // First attempt to mount (this already tries format-on-failure inside begin())
+    if (InternalFS.begin()) {
+      if (quickHealthCheck()) {
+        STORAGE_DEBUG_TRACE("Filesystem mounted & healthy");
+        return true;
+      }
+      STORAGE_DEBUG_TRACE("Filesystem mounted but failed health-check");
+      // fall-through to low-level format
+    }
+
+    // Either first begin() failed, or health-check indicated corruption
+    if (!lowLevelFormat()) {
+      STORAGE_DEBUG_TRACE("Recovery format failed — cannot init filesystem");
       return false;
     }
 
-    STORAGE_DEBUG_TRACE("Filesystem initialized");
+    STORAGE_DEBUG_TRACE("Filesystem recovered with fresh format");
     return true;
   }
 
@@ -114,13 +209,27 @@ class StorageFileManager {
         STORAGE_DEBUG_TRACE("V1 storage file size mismatch - cannot migrate");
         STORAGE_DEBUG_TRACE("Deleting incompatible V1 storage file");
 
-        // Delete the V1 file without migration
         if (InternalFS.remove(V1_STORAGE_FILE_PATH)) {
           STORAGE_DEBUG_TRACE("Deleted incompatible V1 storage file");
-        } else {
-          STORAGE_DEBUG_TRACE("Failed to delete V1 storage file");
+          return true;
         }
 
+        // Deletion failed: treat this as serious corruption and re-format
+        STORAGE_DEBUG_TRACE("Delete failed – executing emergency reformat");
+        InternalFS.end();
+        if (!InternalFS.erase()) {
+          STORAGE_DEBUG_TRACE("Emergency erase FAILED");
+          return false;
+        }
+        if (!InternalFS.format()) {
+          STORAGE_DEBUG_TRACE("Emergency format FAILED");
+          return false;
+        }
+        // Re-mount to continue normal startup
+        if (!InternalFS.begin()) {
+          STORAGE_DEBUG_TRACE("Mount after emergency format FAILED");
+          return false;
+        }
         return true;
       }
 
@@ -533,6 +642,7 @@ class NRF52Flash : public kaleidoscope::driver::storage::Base<_StorageProps> {
   }
 
   void setup() {
+    DEBUG_TRACE("Storage", "Setting up storage");
     StorageFileManager<_StorageProps>::verifyAndFixFiles();
   }
 
