@@ -30,6 +30,9 @@
 #include "kaleidoscope/KeyEvent.h"
 #include "kaleidoscope/key_defs/ble.h"
 #include "kaleidoscope/keyswitch_state.h"
+#include <Adafruit_LittleFS.h>
+#include <InternalFileSystem.h>
+#include "utility/bonding.h"
 
 namespace kaleidoscope {
 namespace driver {
@@ -47,6 +50,9 @@ BLEUartWrapper BLEBluefruit::bleuart;
 
 // Add static variable to track sleep start time
 static uint32_t sleep_start_time = 0;
+
+volatile uint32_t BLEBluefruit::bond_write_deadline_ms = 0;
+volatile bool BLEBluefruit::bond_write_pending         = false;
 
 /**
  * @brief Prepare BLE for sleep mode to conserve power
@@ -96,24 +102,24 @@ void BLEBluefruit::restoreAfterSleep() {
     DEBUG_BLE_MSG("Restored TX power to: ", pre_sleep_tx_power, "dBm");
   }
 
-  bool connected   = Bluefruit.Periph.connected();
-  bool advertising = Bluefruit.Advertising.isRunning();
-  uint32_t sleep_duration = millis() - sleep_start_time;
+  bool connected           = Bluefruit.Periph.connected();
+  bool advertising         = Bluefruit.Advertising.isRunning();
+  uint32_t sleep_duration  = millis() - sleep_start_time;
   bool connection_is_stale = false;
-  
+
   // If we think we're connected but slept for a long time, validate the connection
-  if (connected && sleep_duration > 900000) { // 15 minutes
+  if (connected && sleep_duration > 900000) {  // 15 minutes
     DEBUG_BLE_MSG("Long sleep detected, validating connection...");
-    
+
     // Try to get connection object and validate it
     if (Bluefruit.connected()) {
       uint16_t conn_handle = Bluefruit.connHandle();
-      BLEConnection *conn = Bluefruit.Connection(conn_handle);
-      
+      BLEConnection *conn  = Bluefruit.Connection(conn_handle);
+
       if (conn && conn->connected()) {
         // Try to get RSSI - this will fail if connection is stale
         int8_t rssi = conn->getRssi();
-        
+
         // RSSI of 127 often indicates invalid/stale connection
         // RSSI worse than -90 dBm likely indicates connection issues
         if (rssi == 127 || rssi < -90) {
@@ -122,7 +128,7 @@ void BLEBluefruit::restoreAfterSleep() {
         } else {
           // Try to get connection parameters - if this fails, connection is likely dead
           uint16_t interval = conn->getConnectionInterval();
-          if (interval == 0 || interval > 1000) { // Sanity check on interval
+          if (interval == 0 || interval > 1000) {  // Sanity check on interval
             DEBUG_BLE_MSG("Connection validation failed: invalid interval=", interval);
             connection_is_stale = true;
           } else {
@@ -138,9 +144,9 @@ void BLEBluefruit::restoreAfterSleep() {
       connection_is_stale = true;
     }
   }
-  
+
   bool force_advertising = connection_is_stale;
-  
+
   DEBUG_BLE_MSG("After sleep: connected=", connected, ", advertising=", advertising, ", sleep_duration=", sleep_duration, "ms, stale=", connection_is_stale);
 
   if ((!connected && current_device_id > 0) || force_advertising) {
@@ -152,9 +158,9 @@ void BLEBluefruit::restoreAfterSleep() {
         DEBUG_BLE_MSG("Disconnecting stale handle: ", conn_handle);
         Bluefruit.disconnect(conn_handle);
       }
-      delay(100); // Allow disconnect to complete
+      delay(100);  // Allow disconnect to complete
     }
-    
+
     DEBUG_BLE_MSG("Attempting to start advertising after sleep...");
     startConnectableAdvertising();
     if (!Bluefruit.Advertising.isRunning()) {
@@ -350,10 +356,108 @@ void BLEBluefruit::connect_cb(uint16_t conn_handle) {
     return;
   }
 
+  DEBUG_BLE_MSG("Connection established, handle: ", conn_handle);
+
+  // Check if this is a reconnection to a bonded device
+  bool is_bonded = conn->bonded();
+  DEBUG_BLE_MSG("Bonding status check: ", is_bonded ? "BONDED" : "NOT BONDED");
+
+  // Get peer address for bonding checks
+  ble_gap_addr_t peer_addr = conn->getPeerAddr();
+
+  // Check bonding state more thoroughly
+  DEBUG_BLE_MSG("Peer address: ",
+                peer_addr.addr[5],
+                ":",
+                peer_addr.addr[4],
+                ":",
+                peer_addr.addr[3],
+                ":",
+                peer_addr.addr[2],
+                ":",
+                peer_addr.addr[1],
+                ":",
+                peer_addr.addr[0]);
+
+  if (is_bonded) {
+    DEBUG_BLE_MSG("*** RECONNECTION TO BONDED DEVICE DETECTED ***");
+    DEBUG_BLE_MSG("Bonding state consistent - connection reports as bonded");
+  } else {
+    DEBUG_BLE_MSG("*** NEW CONNECTION TO UNBONDED DEVICE ***");
+    DEBUG_BLE_MSG("Bonding state consistent - connection reports as not bonded");
+  }
+
+  // Log connection details
+  DEBUG_BLE_MSG("Peer address: ",
+                peer_addr.addr[5],
+                ":",
+                peer_addr.addr[4],
+                ":",
+                peer_addr.addr[3],
+                ":",
+                peer_addr.addr[2],
+                ":",
+                peer_addr.addr[1],
+                ":",
+                peer_addr.addr[0]);
+
+  // Log initial connection parameters
+  uint16_t interval = conn->getConnectionInterval();
+  uint16_t latency  = conn->getSlaveLatency();
+  uint16_t timeout  = conn->getSupervisionTimeout();
+  DEBUG_BLE_MSG("Initial connection parameters - Interval: ", (int)(interval * 1.25f), "ms, Latency: ", latency, ", Timeout: ", (timeout * 10), "ms");
+
+  // Log additional connection characteristics that might vary between devices
+  int8_t rssi = conn->getRssi();
+  DEBUG_BLE_MSG("Initial RSSI: ", rssi, " dBm");
+
+  uint16_t mtu = conn->getMtu();
+  DEBUG_BLE_MSG("Initial MTU: ", mtu, " bytes");
+
+  uint16_t data_length = conn->getDataLength();
+  DEBUG_BLE_MSG("Initial Data Length: ", data_length, " bytes");
+
+  // Log timing information
+  static uint32_t last_connect_time = 0;
+  uint32_t now                      = millis();
+  uint32_t time_since_last_connect  = now - last_connect_time;
+  DEBUG_BLE_MSG("Time since last connect: ", time_since_last_connect, "ms");
+  last_connect_time = now;
+
+  // Log device-specific information
+  DEBUG_BLE_MSG("Current device slot: ", current_device_id);
+  DEBUG_BLE_MSG("Current BLE address: ",
+                Bluefruit.getAddr().addr[5],
+                ":",
+                Bluefruit.getAddr().addr[4],
+                ":",
+                Bluefruit.getAddr().addr[3],
+                ":",
+                Bluefruit.getAddr().addr[2],
+                ":",
+                Bluefruit.getAddr().addr[1],
+                ":",
+                Bluefruit.getAddr().addr[0]);
+
+  // Log power and voltage information if available
+  DEBUG_BLE_MSG("TX Power: ", Bluefruit.getTxPower(), " dBm");
+
+  // Check if this is a reconnection attempt
+  static uint8_t connection_count = 0;
+  connection_count++;
+  DEBUG_BLE_MSG("Connection attempt #", connection_count);
+
+  // Track connection start time for duration measurement
+  static uint32_t connect_start_time = 0;
+  connect_start_time                 = millis();
+  DEBUG_BLE_MSG("Connection start time recorded");
+
   Bluefruit.Security.setMITM(true);
 }
 
 void BLEBluefruit::secured_cb(uint16_t conn_handle) {
+  DEBUG_BLE_MSG("secured_cb called for handle: ", conn_handle);
+
   BLEConnection *conn = Bluefruit.Connection(conn_handle);
   if (!conn) {
     DEBUG_BLE_MSG("ERROR: Could not get connection object");
@@ -361,11 +465,31 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
   }
 
   // Are we bonded?
-  if (conn->bonded()) {
-    DEBUG_BLE_MSG("Connection reports as already bonded");
+  bool is_bonded = conn->bonded();
+  if (is_bonded) {
+    DEBUG_BLE_MSG("Connection reports as already bonded - being conservative with reconnection");
+
+    // For bonded connections, be very conservative about any changes
+    // The host already knows this device, so don't rock the boat
+    DEBUG_BLE_MSG("Bonded connection detected - minimizing parameter changes");
+
+    // Don't request any connection parameter changes for bonded connections
+    // Let the host use whatever parameters it prefers
+    DEBUG_BLE_MSG("Skipping connection parameter requests for bonded connection");
+
   } else {
-    DEBUG_BLE_MSG("Initiating new pairing request");
-    conn->requestPairing();
+    DEBUG_BLE_MSG("Connection not bonded, checking if we should request pairing");
+
+    // Request pairing at most every 2 s to avoid spamming the host
+    static uint32_t last_pairing_request = 0;
+    uint32_t now                         = millis();
+    if ((now - last_pairing_request) > 2000) {
+      DEBUG_BLE_MSG("Requesting pairing after delay");
+      last_pairing_request = now;
+      conn->requestPairing();
+    } else {
+      DEBUG_BLE_MSG("Skipping pairing request, too soon since last attempt");
+    }
   }
 
   // Get actual connection parameters
@@ -373,7 +497,7 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
   uint16_t actual_latency  = conn->getSlaveLatency();
   uint16_t actual_timeout  = conn->getSupervisionTimeout();
 
-  DEBUG_BLE_MSG("Connection parameters:");
+  DEBUG_BLE_MSG("Connection parameters in secured_cb:");
   char msg[64];
   snprintf(msg, sizeof(msg), "Interval: %dms", static_cast<int>(actual_interval * 1.25f));  // Convert from units to ms
   DEBUG_BLE_MSG(msg);
@@ -382,15 +506,45 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
   snprintf(msg, sizeof(msg), "Timeout: %dms", actual_timeout * 10);  // Convert to ms
   DEBUG_BLE_MSG(msg);
 
-  // Check if parameters match our requested values
-  if ((actual_interval * 1.25f) > CONN_INTERVAL_MAX_MS) {
-    snprintf(msg, sizeof(msg), "Warning: Connection interval %dms higher than requested %dms", static_cast<int>(actual_interval * 1.25f), CONN_INTERVAL_MAX_MS);
-    DEBUG_BLE_MSG(msg);
+  // For bonded connections, be very conservative about parameter changes
+  // Only request updates if parameters are clearly problematic
+  bool needs_update = false;
+
+  if (is_bonded) {
+    // For bonded connections, be extremely conservative
+    // Only update if parameters are clearly broken
+    if ((actual_interval * 1.25f) > 200) {  // Only if interval > 250ms (very high)
+      DEBUG_BLE_MSG("Bonded connection: interval extremely high, requesting update");
+      needs_update = true;
+    } else if (actual_timeout < 50) {  // Only if timeout < 500ms (very short)
+      DEBUG_BLE_MSG("Bonded connection: timeout extremely short, requesting update");
+      needs_update = true;
+    } else {
+      DEBUG_BLE_MSG("Bonded connection: parameters acceptable, no update needed");
+    }
+  } else {
+    // For new connections, be more aggressive about optimization
+    if ((actual_interval * 1.25f) > (CONN_INTERVAL_MAX_MS * 1.5f)) {
+      DEBUG_BLE_MSG("New connection: interval too high, requesting update");
+      needs_update = true;
+    }
+
+    if (actual_latency > (SLAVE_LATENCY * 2)) {
+      DEBUG_BLE_MSG("New connection: latency too high, requesting update");
+      needs_update = true;
+    }
+
+    if (actual_timeout < (SUPERVISION_TIMEOUT_MS / 10)) {
+      DEBUG_BLE_MSG("New connection: timeout too short, requesting update");
+      needs_update = true;
+    }
   }
 
-  if (actual_latency > SLAVE_LATENCY) {
-    snprintf(msg, sizeof(msg), "Warning: Slave latency %d higher than requested %d", actual_latency, SLAVE_LATENCY);
-    DEBUG_BLE_MSG(msg);
+  if (needs_update) {
+    DEBUG_BLE_MSG("Requesting connection parameter update...");
+    conn->requestConnectionParameter(CONN_INTERVAL_MIN_MS, SLAVE_LATENCY, SUPERVISION_TIMEOUT_MS);
+  } else {
+    DEBUG_BLE_MSG("Connection parameters acceptable, no update needed");
   }
 
   // Get and log connection status and errors
@@ -409,51 +563,23 @@ void BLEBluefruit::secured_cb(uint16_t conn_handle) {
   snprintf(msg, sizeof(msg), "Connected. Handle: %d", conn_handle);
   DEBUG_BLE_MSG(msg);
 
-
-  // Supervision timeout: 1000ms (100 * 10ms)
-  // TODO(jesse): Move this to "before connection" code
-  Bluefruit.Periph.setConnSupervisionTimeout(100);
-
-  //requestConnectionParameter is used to try to force a negotiation after connection is established
-
-  conn->requestConnectionParameter(CONN_INTERVAL_MIN_MS, SLAVE_LATENCY, SUPERVISION_TIMEOUT_MS);
-
-  DEBUG_BLE_MSG("Connection status: ", conn->connected() ? "connected" : "disconnected");
-  DEBUG_BLE_MSG("After we requestConnectionParameter to try to force a lower latency and longer timeout");
-
-  // Get actual connection parameters
-  actual_interval = conn->getConnectionInterval();
-  actual_latency  = conn->getSlaveLatency();
-  actual_timeout  = conn->getSupervisionTimeout();
-
-  DEBUG_BLE_MSG("Connection parameters:");
-  snprintf(msg, sizeof(msg), "Interval: %dms", static_cast<int>(actual_interval * 1.25f));  // Convert from units to ms
-  DEBUG_BLE_MSG(msg);
-  snprintf(msg, sizeof(msg), "Latency: %d", actual_latency);
-  DEBUG_BLE_MSG(msg);
-  snprintf(msg, sizeof(msg), "Timeout: %dms", actual_timeout * 10);  // Convert to ms
-  DEBUG_BLE_MSG(msg);
-
-  // Check if parameters match our requested values
-  if ((actual_interval * 1.25f) > CONN_INTERVAL_MAX_MS) {
-    snprintf(msg, sizeof(msg), "Warning: Connection interval %dms higher than requested %dms", static_cast<int>(actual_interval * 1.25f), CONN_INTERVAL_MAX_MS);
-    DEBUG_BLE_MSG(msg);
-  }
-
-  if (actual_latency > SLAVE_LATENCY) {
-    snprintf(msg, sizeof(msg), "Warning: Slave latency %d higher than requested %d", actual_latency, SLAVE_LATENCY);
-    DEBUG_BLE_MSG(msg);
-  }
-
+  DEBUG_BLE_MSG("Setting host connection mode to BLE");
   kaleidoscope::Runtime.device().setHostConnectionMode(MODE_BLE);
 
+  DEBUG_BLE_MSG("Calling onHostConnectionStatusChanged with Connected status");
   Hooks::onHostConnectionStatusChanged(current_device_id, kaleidoscope::HostConnectionStatus::Connected);
+
+  DEBUG_BLE_MSG("Clearing HID report queue");
   kaleidoscope::driver::hid::bluefruit::blehid.clearReportQueue();
+
+  DEBUG_BLE_MSG("Starting HID report processing");
   kaleidoscope::driver::hid::bluefruit::blehid.startReportProcessing();
+
+  DEBUG_BLE_MSG("secured_cb completed successfully");
 }
 
 void BLEBluefruit::pairing_complete_cb(uint16_t conn_handle, uint8_t auth_status) {
-  DEBUG_BLE_MSG("Pairing complete, auth_status = ", auth_status);
+  DEBUG_BLE_MSG("pairing_complete_cb called for handle: ", conn_handle, " with auth_status: ", auth_status);
 
   // Send pairing status before trying to get connection object
   Hooks::onHostConnectionStatusChanged(current_device_id,
@@ -461,7 +587,7 @@ void BLEBluefruit::pairing_complete_cb(uint16_t conn_handle, uint8_t auth_status
                                                         : kaleidoscope::HostConnectionStatus::PairingFailed);
 
   if (auth_status != 0) {
-    DEBUG_BLE_MSG("Pairing failed");
+    DEBUG_BLE_MSG("Pairing failed with auth_status: ", auth_status);
     return;
   }
 
@@ -473,16 +599,121 @@ void BLEBluefruit::pairing_complete_cb(uint16_t conn_handle, uint8_t auth_status
       return;
     }
 
-    // Ensure connection parameters are set correctly after pairing
-    conn->requestConnectionParameter(CONN_INTERVAL_MIN_MS, SLAVE_LATENCY, SUPERVISION_TIMEOUT_MS);
+    // Check bonding status after successful pairing
+    bool is_bonded = conn->bonded();
+    DEBUG_BLE_MSG("After pairing: bonding status = ", is_bonded ? "BONDED" : "NOT BONDED");
+
+    if (is_bonded) {
+      DEBUG_BLE_MSG("Bonding information successfully stored");
+
+      // Log bonding details
+      ble_gap_addr_t peer_addr = conn->getPeerAddr();
+      DEBUG_BLE_MSG("Bonded peer address: ",
+                    peer_addr.addr[5],
+                    ":",
+                    peer_addr.addr[4],
+                    ":",
+                    peer_addr.addr[3],
+                    ":",
+                    peer_addr.addr[2],
+                    ":",
+                    peer_addr.addr[1],
+                    ":",
+                    peer_addr.addr[0]);
+
+      DEBUG_BLE_MSG("Bonding completed successfully");
+
+      bond_write_pending     = true;
+      bond_write_deadline_ms = millis() + 1500;
+    } else {
+      DEBUG_BLE_MSG("WARNING: Pairing succeeded but device reports as not bonded!");
+      DEBUG_BLE_MSG("This might indicate a bonding storage issue");
+    }
+
+    // Connection parameters are already handled in secured_cb, no need to request again
+    DEBUG_BLE_MSG("Pairing successful, connection parameters already configured");
   } else {
     DEBUG_BLE_MSG("Connection already closed when pairing completed");
   }
+
+  DEBUG_BLE_MSG("pairing_complete_cb completed");
 }
 
 void BLEBluefruit::disconnect_cb(uint16_t conn_handle, uint8_t reason) {
   kaleidoscope::driver::hid::bluefruit::blehid.stopReportProcessing();
   DEBUG_BLE_MSG("Disconnected, reason = 0x", reason, HEX);
+
+  // Log timing information for disconnect
+  static uint32_t last_disconnect_time = 0;
+  uint32_t now                         = millis();
+  uint32_t time_since_last_disconnect  = now - last_disconnect_time;
+  DEBUG_BLE_MSG("Time since last disconnect: ", time_since_last_disconnect, "ms");
+  last_disconnect_time = now;
+
+  // Log connection duration if we can track it
+  static uint32_t connect_start_time = 0;
+  if (connect_start_time > 0) {
+    uint32_t connection_duration = now - connect_start_time;
+    DEBUG_BLE_MSG("Connection duration: ", connection_duration, "ms");
+    connect_start_time = 0;  // Reset for next connection
+  }
+
+  // Track disconnect patterns
+  static uint8_t disconnect_count         = 0;
+  static uint8_t remote_termination_count = 0;
+  disconnect_count++;
+
+  if (reason == BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION) {
+    remote_termination_count++;
+    DEBUG_BLE_MSG("Remote termination count: ", remote_termination_count, " out of ", disconnect_count, " total disconnects");
+  }
+
+  DEBUG_BLE_MSG("Total disconnect count: ", disconnect_count);
+
+  // Log the reason code in a more readable format
+  const char *reason_str = "Unknown";
+  switch (reason) {
+  case BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION:
+    reason_str = "Remote User Terminated";
+    break;
+  case BLE_HCI_LOCAL_HOST_TERMINATED_CONNECTION:
+    reason_str = "Local Host Terminated";
+    break;
+  case BLE_HCI_REMOTE_DEV_TERMINATION_DUE_TO_POWER_OFF:
+    reason_str = "Remote Device Power Off";
+    break;
+  case BLE_HCI_CONNECTION_TIMEOUT:
+    reason_str = "Connection Timeout";
+    break;
+  case BLE_HCI_CONN_FAILED_TO_BE_ESTABLISHED:
+    reason_str = "Connection Failed to Establish";
+    break;
+  case BLE_HCI_UNSUPPORTED_REMOTE_FEATURE:
+    reason_str = "Unsupported Remote Feature";
+    break;
+  case BLE_HCI_PAIRING_WITH_UNIT_KEY_UNSUPPORTED:
+    reason_str = "Pairing with Unit Key Not Supported";
+    break;
+  case BLE_HCI_INSTANT_PASSED:
+    reason_str = "Instant Passed";
+    break;
+  case BLE_HCI_DIFFERENT_TRANSACTION_COLLISION:
+    reason_str = "Different Transaction Collision";
+    break;
+  case BLE_HCI_STATUS_CODE_LMP_PDU_NOT_ALLOWED:
+    reason_str = "LMP PDU Not Allowed";
+    break;
+  case BLE_HCI_DIRECTED_ADVERTISER_TIMEOUT:
+    reason_str = "Directed Advertising Timeout";
+    break;
+  case BLE_HCI_CONN_TERMINATED_DUE_TO_MIC_FAILURE:
+    reason_str = "Connection Terminated Due to MIC Failure";
+    break;
+  default:
+    reason_str = "Unknown Error Code";
+    break;
+  }
+  DEBUG_BLE_MSG("Disconnect reason: ", reason_str, " (0x", reason, HEX, ")");
 
   // Error 0x516 indicates advertising failed - this can happen during rapid state changes
   // We track consecutive failures to prevent getting stuck in a retry loop
@@ -511,17 +742,35 @@ void BLEBluefruit::disconnect_cb(uint16_t conn_handle, uint8_t reason) {
   switch (reason) {
   case BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION:
     DEBUG_BLE_MSG("Remote device terminated connection");
+
+    // For devices that have multiple remote terminations, use a more conservative approach
+    static uint8_t consecutive_remote_terminations = 0;
+    consecutive_remote_terminations++;
+
+    if (consecutive_remote_terminations >= 2) {
+      DEBUG_BLE_MSG("Multiple consecutive remote terminations detected, using conservative reconnection");
+      delay(500);  // Longer delay for problematic devices
+
+      // Reset advertising parameters to be more conservative
+      Bluefruit.Advertising.setInterval(80, 160);  // Slower advertising
+      Bluefruit.Advertising.setFastTimeout(10);    // Shorter fast mode
+    } else {
+      delay(100);  // Normal delay
+    }
+
     startDiscoverableAdvertising();
     break;
 
   case BLE_HCI_LOCAL_HOST_TERMINATED_CONNECTION:
     DEBUG_BLE_MSG("Local device terminated connection. Don't assume we should do something.");
+    consecutive_remote_terminations = 0;  // Reset counter on local termination
     break;
 
   case BLE_HCI_REMOTE_DEV_TERMINATION_DUE_TO_POWER_OFF:
   case BLE_HCI_CONNECTION_TIMEOUT:
   default:
     DEBUG_BLE_MSG("Attempting to reconnect to last device");
+    consecutive_remote_terminations = 0;  // Reset counter on other disconnect types
 
     if (current_device_id > 0) {
       delay(250);  // Give time for cleanup
@@ -681,7 +930,7 @@ kaleidoscope::EventHandlerResult BLEBluefruit::handleBLEOperationKey(uint8_t key
   case BLE_OFF:
     DEBUG_BLE_MSG("BLE key: Turn off BLE");
     stopAdvertising();
-    disconnect();
+    scheduleSafeDisconnect();
     kaleidoscope::Runtime.device().setHostConnectionMode(MODE_USB);
     return kaleidoscope::EventHandlerResult::EVENT_CONSUMED;
 
@@ -693,6 +942,17 @@ kaleidoscope::EventHandlerResult BLEBluefruit::handleBLEOperationKey(uint8_t key
   default:
     return kaleidoscope::EventHandlerResult::OK;
   }
+}
+
+void BLEBluefruit::scheduleSafeDisconnect() {
+  uint32_t now = millis();
+  if (bond_write_pending && ((int32_t)(bond_write_deadline_ms - now) > 0)) {
+    uint32_t wait_ms = bond_write_deadline_ms - now;
+    DEBUG_BLE_MSG("Delaying disconnect %ums to allow bond write", wait_ms);
+    delay(wait_ms);
+    bond_write_pending = false;
+  }
+  disconnect();
 }
 
 }  // namespace ble
