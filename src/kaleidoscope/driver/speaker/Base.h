@@ -47,7 +47,7 @@ class Base {
 
   void playTune(const uint16_t *notes, const uint16_t *durations, uint8_t length);
   void playTune(std::initializer_list<uint16_t> notes, std::initializer_list<uint16_t> durations) {
-    playTune(notes.begin(), durations.begin(), notes.size());
+    playTune(notes.begin(), durations.begin(), min(notes.size(), durations.size()));
   }
   virtual void stopTune();
   virtual void update();
