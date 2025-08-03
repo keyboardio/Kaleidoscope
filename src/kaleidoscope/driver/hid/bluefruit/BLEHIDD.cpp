@@ -258,11 +258,21 @@ bool HIDD::processNextReport_() {
 
     return true;
   } else if (report.retries_left > 0) {
-    // Update retry count in place without removing the item
+    // Update retry count - we need to remove and re-add the item
+    // because FreeRTOS doesn't support in-place updates for multi-item queues
     report.retries_left--;
-    // Use xQueueOverwrite to safely update the item at the front of the queue
-    // This is safe because we know the item exists (we just peeked at it)
-    xQueueOverwrite(queue_handle_, &report);
+    
+    // Remove the old item
+    QueuedReport dummy;
+    xQueueReceive(queue_handle_, &dummy, 0);
+    
+    // Add it back with updated retry count at the front of the queue
+    if (xQueueSendToFront(queue_handle_, &report, 0) != pdTRUE) {
+      // If we can't re-queue, treat it as a failure
+      DEBUG_BLE_MSG("Failed to re-queue report for retry");
+      return true;
+    }
+    
     DEBUG_BLE_MSG("Retrying report, %d retries left", report.retries_left);
     return false;  // Signal failure so we'll wait before next retry
   } else {
