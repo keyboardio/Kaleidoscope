@@ -2,7 +2,7 @@ VERSION 1
 
 KEYSWITCH OSM_0  0 0  # left shift
 KEYSWITCH OSM_1  0 1  # left alt
-KEYSWITCH ESC    1 0
+KEYSWITCH ESC    1 0  # escape
 
 # ==============================================================================
 NAME EscapeOneShot cancel temporary
