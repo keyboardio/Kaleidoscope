@@ -885,23 +885,25 @@ kaleidoscope::EventHandlerResult BLEBluefruit::onKeyEvent(kaleidoscope::KeyEvent
   if (!keyToggledOn(event.state))
     return kaleidoscope::EventHandlerResult::OK;
 
-  // Get the keycode first to do a fast check if it's in our range
+  // Define the BLE key range using constructed Key objects
+  static constexpr Key ble_key_range_start = Key(BLE_TOGGLE, KEY_FLAGS | SYNTHETIC);
+  static constexpr Key ble_key_range_end = Key(0x8F, KEY_FLAGS | SYNTHETIC);  // Include all reserved BLE slots
+  static constexpr Key ble_operation_range_end = Key(BLE_PAIR, KEY_FLAGS | SYNTHETIC);
+  static constexpr Key ble_device_range_start = Key(BLE_SELECT_DEVICE_1, KEY_FLAGS | SYNTHETIC);
+
+  // Check if this key is in the BLE range
+  if (event.key.getRaw() < ble_key_range_start.getRaw() || 
+      event.key.getRaw() > ble_key_range_end.getRaw())
+    return kaleidoscope::EventHandlerResult::OK;
+
+  // Extract the BLE keycode from the raw key value
   uint8_t keyCode = event.key.getKeyCode();
 
   // Quick check if this is a BLE-related key based on keycode ranges
-  // This avoids unnecessary flag checks for non-BLE keys
-  bool is_ble_operation    = (keyCode >= BLE_TOGGLE &&
-                           keyCode <= BLE_PAIR);
-  bool is_device_selection = (keyCode >= BLE_SELECT_DEVICE_1 &&
-                              keyCode <= BLE_SELECT_DEVICE_4);
-
-  if (!is_ble_operation && !is_device_selection)
-    return kaleidoscope::EventHandlerResult::OK;
-
-  // Now check that this is actually a SYNTHETIC key
-  // (this guards against regular keys with same keycode values)
-  if (!(event.key.getFlags() & SYNTHETIC))
-    return kaleidoscope::EventHandlerResult::OK;
+  bool is_ble_operation    = (event.key.getRaw() >= ble_key_range_start.getRaw() &&
+                           event.key.getRaw() <= ble_operation_range_end.getRaw());
+  bool is_device_selection = (event.key.getRaw() >= ble_device_range_start.getRaw() &&
+                              event.key.getRaw() <= ble_key_range_end.getRaw());
 
   // Handle BLE operation keys
   if (is_ble_operation) {
