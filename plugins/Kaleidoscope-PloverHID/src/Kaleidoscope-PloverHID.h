@@ -20,39 +20,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef USE_TINYUSB
+#pragma once
 
-#include <stdint.h>  // for uint8_t, int8_t, uint16_t
-
-#include "Adafruit_TinyUSB.h"
-#include "MultiReport.h"
-
-namespace kaleidoscope {
-namespace driver {
-namespace hid {
-namespace tinyusb {
-
-static const uint8_t TUSBMultiReportDesc[] = {
-  DESCRIPTOR_CONSUMER_CONTROL(HID_REPORT_ID(RID_CONSUMER_CONTROL)),
-  DESCRIPTOR_MOUSE(HID_REPORT_ID(RID_MOUSE)),
-  DESCRIPTOR_SYSTEM_CONTROL(HID_REPORT_ID(RID_SYSTEM_CONTROL)),
-  DESCRIPTOR_PLOVER_HID(HID_REPORT_ID(RID_PLOVER_HID)),
-};
-
-
-TUSBMultiReport_::TUSBMultiReport_()
-  : HIDD(TUSBMultiReportDesc, sizeof(TUSBMultiReportDesc), HID_ITF_PROTOCOL_NONE, 1) {
-}
-
-
-TUSBMultiReport_ &TUSBMultiReport() {
-  static TUSBMultiReport_ obj;
-  return obj;
-}
-
-}  // namespace tinyusb
-}  // namespace hid
-}  // namespace driver
-}  // namespace kaleidoscope
-
-#endif /* USE_TINYUSB */
+#include "kaleidoscope/plugin/PloverHID.h"  // IWYU pragma: export

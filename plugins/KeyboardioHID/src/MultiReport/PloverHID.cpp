@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2024 Keyboard.io, Inc
+Copyright (c) 2015-2025 Keyboard.io, inc
 
 See the readme for credit to other people.
 
@@ -23,46 +23,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// Include guard
-#pragma once
+#include "PloverHID.h"
 
+static const uint8_t plover_hid_descriptor_[] PROGMEM = {
+  DESCRIPTOR_PLOVER_HID(HID_REPORT_ID(HID_REPORTID_PLOVER_HID)),
+};
 
-#define HID_REPORTID_NONE 0
+PloverHID_::PloverHID_() {
+  static HIDSubDescriptor node(plover_hid_descriptor_,
+                               sizeof(plover_hid_descriptor_));
+  HID().AppendDescriptor(&node);
+}
 
-#ifndef HID_REPORTID_MOUSE
-#define HID_REPORTID_MOUSE 1
-#endif
+void PloverHID_::sendReport(void *data, int length) {
+  HID().SendReport(HID_REPORTID_PLOVER_HID, data, length);
+}
 
-#ifndef HID_REPORTID_KEYBOARD
-#define HID_REPORTID_KEYBOARD 2
-#endif
-
-#ifndef HID_REPORTID_RAWHID
-// This will not work properly in most cases.
-// The number is just kept from the old number counting.
-//#define HID_REPORTID_RAWHID 3
-#endif
-
-#ifndef HID_REPORTID_CONSUMERCONTROL
-#define HID_REPORTID_CONSUMERCONTROL 4
-#endif
-
-#ifndef HID_REPORTID_SYSTEMCONTROL
-#define HID_REPORTID_SYSTEMCONTROL 5
-#endif
-
-#ifndef HID_REPORTID_GAMEPAD
-#define HID_REPORTID_GAMEPAD 6
-#endif
-
-#ifndef HID_REPORTID_MOUSE_ABSOLUTE
-#define HID_REPORTID_MOUSE_ABSOLUTE 7
-#endif
-
-#ifndef HID_REPORTID_NKRO_KEYBOARD
-#define HID_REPORTID_NKRO_KEYBOARD 8
-#endif
-
-#ifndef HID_REPORTID_PLOVER_HID
-#define HID_REPORTID_PLOVER_HID 0x50
-#endif
+PloverHID_ PloverHID;

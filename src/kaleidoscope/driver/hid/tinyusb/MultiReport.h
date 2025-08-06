@@ -31,6 +31,7 @@
 #include "kaleidoscope/driver/hid/base/Keyboard.h"
 #include "kaleidoscope/driver/hid/apis/ConsumerControlAPI.h"
 #include "kaleidoscope/driver/hid/apis/MouseAPI.h"
+#include "kaleidoscope/driver/hid/apis/PloverHIDAPI.h"
 #include "kaleidoscope/driver/hid/apis/SystemControlAPI.h"
 #include "HIDD.h"
 
@@ -45,6 +46,7 @@ enum MultiReportIDs {
   RID_CONSUMER_CONTROL = 1,
   RID_MOUSE,
   RID_SYSTEM_CONTROL,
+  RID_PLOVER_HID,
 };
 
 class TUSBMultiReport_ : public HIDD {

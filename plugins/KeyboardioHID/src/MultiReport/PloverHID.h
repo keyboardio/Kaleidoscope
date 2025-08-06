@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2014-2015 NicoHood
-Copyright (c) 2015-2024 Keyboard.io, Inc
+Copyright (c) 2015-2025 Keyboard.io, inc
 
 See the readme for credit to other people.
 
@@ -23,46 +23,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// Include guard
 #pragma once
 
+#include "HID.h"
+#include "HID-Settings.h"
+#include "kaleidoscope/driver/hid/apis/PloverHIDAPI.h"
 
-#define HID_REPORTID_NONE 0
+class PloverHID_ {
+ public:
+  PloverHID_();
+  void sendReport(void *data, int length);
+};
 
-#ifndef HID_REPORTID_MOUSE
-#define HID_REPORTID_MOUSE 1
-#endif
-
-#ifndef HID_REPORTID_KEYBOARD
-#define HID_REPORTID_KEYBOARD 2
-#endif
-
-#ifndef HID_REPORTID_RAWHID
-// This will not work properly in most cases.
-// The number is just kept from the old number counting.
-//#define HID_REPORTID_RAWHID 3
-#endif
-
-#ifndef HID_REPORTID_CONSUMERCONTROL
-#define HID_REPORTID_CONSUMERCONTROL 4
-#endif
-
-#ifndef HID_REPORTID_SYSTEMCONTROL
-#define HID_REPORTID_SYSTEMCONTROL 5
-#endif
-
-#ifndef HID_REPORTID_GAMEPAD
-#define HID_REPORTID_GAMEPAD 6
-#endif
-
-#ifndef HID_REPORTID_MOUSE_ABSOLUTE
-#define HID_REPORTID_MOUSE_ABSOLUTE 7
-#endif
-
-#ifndef HID_REPORTID_NKRO_KEYBOARD
-#define HID_REPORTID_NKRO_KEYBOARD 8
-#endif
-
-#ifndef HID_REPORTID_PLOVER_HID
-#define HID_REPORTID_PLOVER_HID 0x50
-#endif
+extern PloverHID_ PloverHID;
