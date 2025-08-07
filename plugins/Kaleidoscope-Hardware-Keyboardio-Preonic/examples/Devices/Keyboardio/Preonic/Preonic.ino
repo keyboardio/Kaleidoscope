@@ -48,6 +48,7 @@
 
 // Support for an LED mode that lets one configure per-layer color maps
 #include "Kaleidoscope-PreonicColormap.h"
+#include "Kaleidoscope-PreonicBootGreeting.h"
 
 
 // Support for setting and saving the default LED mode
@@ -287,6 +288,8 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // default LED mode.
   DefaultLEDModeConfig,
 
+  // Butterfly wing flapping boot greeting
+  PreonicBootGreetingEffect,
 
   // We start with the LED effect that turns off all the LEDs.
   LEDOff,
