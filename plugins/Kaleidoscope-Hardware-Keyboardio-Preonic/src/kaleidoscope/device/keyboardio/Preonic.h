@@ -123,15 +123,15 @@ class PreonicKeyScanner : public kaleidoscope::driver::keyscanner::NRF52KeyScann
     // Direction-aware decimation to handle encoder bounce and direction changes
     static int8_t encoder_last_direction[NUM_ENCODERS] = {0};
     static uint8_t encoder_step_counters[NUM_ENCODERS] = {0};
-    
+
     int8_t direction = (step < 0) ? -1 : 1;
-    
+
     // Reset counter on direction change to avoid wrong-direction events
     if (encoder_last_direction[encoder_index] != direction) {
-      encoder_step_counters[encoder_index] = 0;
+      encoder_step_counters[encoder_index]  = 0;
       encoder_last_direction[encoder_index] = direction;
     }
-    
+
     // Only process every Nth event in the same direction
     if (++encoder_step_counters[encoder_index] % ENCODER_STEPS_PER_DETENT != 0) return;
 
