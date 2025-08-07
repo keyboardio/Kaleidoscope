@@ -30,7 +30,7 @@
 #include "kaleidoscope/plugin/LEDControl.h"           // for LEDControl
 #include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb
 #include "kaleidoscope/driver/color/GammaCorrection.h"
-#include "kaleidoscope/plugin/LEDEffect-Rainbow.h"    // for LEDRainbowWaveEffect
+#include "kaleidoscope/plugin/LEDEffect-Rainbow.h"  // for LEDRainbowWaveEffect
 
 namespace kaleidoscope {
 namespace plugin {
@@ -45,7 +45,7 @@ static cRGB gammaCorrectRGB(cRGB color) {
   return CRGB(gammaCorrect(color.r), gammaCorrect(color.g), gammaCorrect(color.b));
 }
 
-bool PreonicBootGreetingEffect::done_       = false;
+bool PreonicBootGreetingEffect::done_          = false;
 uint16_t PreonicBootGreetingEffect::start_time = 0;
 uint16_t PreonicBootGreetingEffect::timeout    = FADE_IN_DURATION + FLAPPING_DURATION + FADE_OUT_DURATION;
 
@@ -57,10 +57,10 @@ EventHandlerResult PreonicBootGreetingEffect::onSetup() {
   // Initialize the rainbow effect with 3x speed and 20% brighter
   rainbow_effect.update_delay(33);  // 3x faster (100/3 ≈ 33)
   rainbow_effect.brightness(154);   // 20% brighter (128 * 1.2 ≈ 154)
-  
+
   // Create the transient mode instance
   rainbow_mode = new LEDRainbowWaveEffect::TransientLEDMode(&rainbow_effect);
-  
+
   return EventHandlerResult::OK;
 }
 
@@ -89,7 +89,7 @@ EventHandlerResult PreonicBootGreetingEffect::afterEachCycle() {
 
   // Calculate overall brightness fade
   uint8_t brightness_scale = 255;
-  
+
   if (elapsed < FADE_IN_DURATION) {
     // Fade in phase
     brightness_scale = (elapsed * 255U) / FADE_IN_DURATION;
@@ -107,24 +107,24 @@ EventHandlerResult PreonicBootGreetingEffect::afterEachCycle() {
   }
 
   // Set the rainbow effect brightness based on our fade (20% brighter)
-  rainbow_effect.brightness((brightness_scale * 154U) / 255U); // Scale to 20% brighter max brightness
-  
+  rainbow_effect.brightness((brightness_scale * 154U) / 255U);  // Scale to 20% brighter max brightness
+
   // Let the rainbow wave effect do all the color calculations
   if (rainbow_mode) {
     rainbow_mode->update();
   }
-  
+
   // Now get just our 4 LEDs and set them manually for the butterfly pattern
   // Top and bottom pairs get different colors from the rainbow
-  cRGB top_left = ::LEDControl.getCrgbAt(TOP_LEFT_LED);
+  cRGB top_left    = ::LEDControl.getCrgbAt(TOP_LEFT_LED);
   cRGB bottom_left = ::LEDControl.getCrgbAt(BOTTOM_LEFT_LED);
-  
+
   // Set both sides to match - butterfly wings are symmetric
   ::LEDControl.setCrgbAt(TOP_LEFT_LED, top_left);
   ::LEDControl.setCrgbAt(TOP_RIGHT_LED, top_left);
   ::LEDControl.setCrgbAt(BOTTOM_LEFT_LED, bottom_left);
   ::LEDControl.setCrgbAt(BOTTOM_RIGHT_LED, bottom_left);
-  
+
   /* BUTTERFLY EFFECT ON HOLD - keeping for later
   uint16_t brightness = 0;
   
