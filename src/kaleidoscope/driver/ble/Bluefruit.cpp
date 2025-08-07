@@ -886,13 +886,13 @@ kaleidoscope::EventHandlerResult BLEBluefruit::onKeyEvent(kaleidoscope::KeyEvent
     return kaleidoscope::EventHandlerResult::OK;
 
   // Define the BLE key range using constructed Key objects
-  static constexpr Key ble_key_range_start = Key(BLE_TOGGLE, KEY_FLAGS | SYNTHETIC);
-  static constexpr Key ble_key_range_end = Key(0x8F, KEY_FLAGS | SYNTHETIC);  // Include all reserved BLE slots
+  static constexpr Key ble_key_range_start     = Key(BLE_TOGGLE, KEY_FLAGS | SYNTHETIC);
+  static constexpr Key ble_key_range_end       = Key(0x8F, KEY_FLAGS | SYNTHETIC);  // Include all reserved BLE slots
   static constexpr Key ble_operation_range_end = Key(BLE_PAIR, KEY_FLAGS | SYNTHETIC);
-  static constexpr Key ble_device_range_start = Key(BLE_SELECT_DEVICE_1, KEY_FLAGS | SYNTHETIC);
+  static constexpr Key ble_device_range_start  = Key(BLE_SELECT_DEVICE_1, KEY_FLAGS | SYNTHETIC);
 
   // Check if this key is in the BLE range
-  if (event.key.getRaw() < ble_key_range_start.getRaw() || 
+  if (event.key.getRaw() < ble_key_range_start.getRaw() ||
       event.key.getRaw() > ble_key_range_end.getRaw())
     return kaleidoscope::EventHandlerResult::OK;
 
