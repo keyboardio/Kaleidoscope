@@ -96,6 +96,7 @@ struct EncoderConfig {
 
 // Move encoder definitions to namespace scope for shared access
 static constexpr size_t NUM_ENCODERS                     = 3;
+static constexpr uint8_t ENCODER_STEPS_PER_DETENT        = 2;  // Skip every 2nd step for proper detent alignment
 static const EncoderConfig ENCODER_CONFIGS[NUM_ENCODERS] = {
   {PIN_ENC1_A, PIN_ENC1_B, {0, 0}, {0, 1}},  // Encoder 1
   {PIN_ENC2_A, PIN_ENC2_B, {0, 2}, {0, 3}},  // Encoder 2
@@ -118,6 +119,21 @@ class PreonicKeyScanner : public kaleidoscope::driver::keyscanner::NRF52KeyScann
    */
   static void encoderEventCallback(uint8_t encoder_index, int step) {
     if (!active_scanner_) return;
+
+    // Direction-aware decimation to handle encoder bounce and direction changes
+    static int8_t encoder_last_direction[NUM_ENCODERS] = {0};
+    static uint8_t encoder_step_counters[NUM_ENCODERS] = {0};
+    
+    int8_t direction = (step < 0) ? -1 : 1;
+    
+    // Reset counter on direction change to avoid wrong-direction events
+    if (encoder_last_direction[encoder_index] != direction) {
+      encoder_step_counters[encoder_index] = 0;
+      encoder_last_direction[encoder_index] = direction;
+    }
+    
+    // Only process every Nth event in the same direction
+    if (++encoder_step_counters[encoder_index] % ENCODER_STEPS_PER_DETENT != 0) return;
 
     if (step < 0) {
       // Counter-clockwise movement
