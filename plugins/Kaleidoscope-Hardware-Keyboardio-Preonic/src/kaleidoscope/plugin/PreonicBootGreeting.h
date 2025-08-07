@@ -45,13 +45,13 @@ class PreonicBootGreetingEffect : public kaleidoscope::Plugin {
   static constexpr uint16_t FLAPPING_DURATION = 8000;  // 8s flapping
   static constexpr uint16_t FADE_OUT_DURATION = 1000;  // 1s fade out
   static constexpr uint16_t FLAP_CYCLE_MS     = 2000;  // 2000ms per flap cycle (0.5 flaps/sec)
-  
+
   // LED indices for wings
   static constexpr uint8_t TOP_LEFT_LED     = 2;
   static constexpr uint8_t TOP_RIGHT_LED    = 3;
   static constexpr uint8_t BOTTOM_LEFT_LED  = 1;
   static constexpr uint8_t BOTTOM_RIGHT_LED = 0;
-  
+
   // Orange color components (RGB) - much more red, minimal green
   static constexpr uint8_t ORANGE_RED   = 255;
   static constexpr uint8_t ORANGE_GREEN = 40;
