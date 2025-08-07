@@ -105,21 +105,21 @@ class AbsoluteMouse_ : public AbsoluteMouseAPI {
 
   void sendReport(void *data, int length) override {
     DEBUG_TRACE("HID", "Sending BLE Absolute Mouse report");
-    
+
     if (blehid.isBootMode()) {
       return;
     }
-    
+
     // Convert global AbsoluteMouse report to BLE-specific format (no buttons)
-    const HID_MouseAbsoluteReport_Data_t* full_report = 
-      static_cast<const HID_MouseAbsoluteReport_Data_t*>(data);
-    
+    const HID_MouseAbsoluteReport_Data_t *full_report =
+      static_cast<const HID_MouseAbsoluteReport_Data_t *>(data);
+
     BLEAbsoluteMouseReport ble_report;
     ble_report.xAxis = full_report->xAxis;
     ble_report.yAxis = full_report->yAxis;
     ble_report.wheel = full_report->wheel;
     // Note: buttons field intentionally omitted for BLE
-    
+
     blehid.sendInputReport(RID_ABS_MOUSE, &ble_report, sizeof(ble_report));
   }
 };

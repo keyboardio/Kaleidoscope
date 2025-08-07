@@ -36,36 +36,36 @@ namespace hid {
 namespace bluefruit {
 
 // BLE-specific absolute mouse descriptor without buttons to avoid macOS classification conflicts
-#define DESCRIPTOR_BLE_ABSOLUTE_MOUSE(...)                \
-  HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),                 \
-    HID_USAGE(HID_USAGE_DESKTOP_MOUSE),                   \
-    HID_COLLECTION(HID_COLLECTION_APPLICATION),           \
-                                                          \
-    /* Report ID, if any */                               \
-    __VA_ARGS__                                           \
-                                                          \
-    HID_USAGE(HID_USAGE_DESKTOP_POINTER),                 \
-    HID_COLLECTION(HID_COLLECTION_PHYSICAL),              \
-                                                          \
-    /* X, Y - NO BUTTONS for BLE to avoid conflicts */   \
-    HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),               \
-    HID_USAGE(HID_USAGE_DESKTOP_X),                       \
-    HID_USAGE(HID_USAGE_DESKTOP_Y),                       \
-    HID_LOGICAL_MIN_N(0, 2),                              \
-    HID_LOGICAL_MAX_N(0x7fff, 2),                         \
-    HID_REPORT_SIZE(16),                                  \
-    HID_REPORT_COUNT(2),                                  \
-    HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE),    \
-                                                          \
-    /* Wheel [-127, 127] */                               \
-    HID_USAGE(HID_USAGE_DESKTOP_WHEEL),                   \
-    HID_LOGICAL_MIN(0x81),                                \
-    HID_LOGICAL_MAX(0x7f),                                \
-    HID_REPORT_SIZE(8),                                   \
-    HID_REPORT_COUNT(1),                                  \
-    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE),    \
-                                                          \
-    HID_COLLECTION_END,                                   \
+#define DESCRIPTOR_BLE_ABSOLUTE_MOUSE(...)             \
+  HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),              \
+    HID_USAGE(HID_USAGE_DESKTOP_MOUSE),                \
+    HID_COLLECTION(HID_COLLECTION_APPLICATION),        \
+                                                       \
+    /* Report ID, if any */                            \
+    __VA_ARGS__                                        \
+                                                       \
+    HID_USAGE(HID_USAGE_DESKTOP_POINTER),              \
+    HID_COLLECTION(HID_COLLECTION_PHYSICAL),           \
+                                                       \
+    /* X, Y - NO BUTTONS for BLE to avoid conflicts */ \
+    HID_USAGE_PAGE(HID_USAGE_PAGE_DESKTOP),            \
+    HID_USAGE(HID_USAGE_DESKTOP_X),                    \
+    HID_USAGE(HID_USAGE_DESKTOP_Y),                    \
+    HID_LOGICAL_MIN_N(0, 2),                           \
+    HID_LOGICAL_MAX_N(0x7fff, 2),                      \
+    HID_REPORT_SIZE(16),                               \
+    HID_REPORT_COUNT(2),                               \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_ABSOLUTE), \
+                                                       \
+    /* Wheel [-127, 127] */                            \
+    HID_USAGE(HID_USAGE_DESKTOP_WHEEL),                \
+    HID_LOGICAL_MIN(0x81),                             \
+    HID_LOGICAL_MAX(0x7f),                             \
+    HID_REPORT_SIZE(8),                                \
+    HID_REPORT_COUNT(1),                               \
+    HID_INPUT(HID_DATA | HID_VARIABLE | HID_RELATIVE), \
+                                                       \
+    HID_COLLECTION_END,                                \
     HID_COLLECTION_END
 
 // BLE-specific absolute mouse report without buttons
@@ -80,7 +80,7 @@ static const uint8_t report_desc[] = {
   DESCRIPTOR_MOUSE(HID_REPORT_ID(RID_MOUSE)),
   DESCRIPTOR_CONSUMER_CONTROL(HID_REPORT_ID(RID_CONSUMER_CONTROL)),
   DESCRIPTOR_SYSTEM_CONTROL(HID_REPORT_ID(RID_SYSTEM_CONTROL)),
-  DESCRIPTOR_BLE_ABSOLUTE_MOUSE(HID_REPORT_ID(RID_ABS_MOUSE)), // BLE-specific version
+  DESCRIPTOR_BLE_ABSOLUTE_MOUSE(HID_REPORT_ID(RID_ABS_MOUSE)),  // BLE-specific version
 };
 
 // Define the static member variables
@@ -95,7 +95,7 @@ err_t HIDD::begin() {
     sizeof(HID_MouseReport_Data_t),
     sizeof(HID_ConsumerControlReport_Data_t),
     sizeof(HID_SystemControlReport_Data_t),
-    sizeof(BLEAbsoluteMouseReport), // Use BLE-specific size
+    sizeof(BLEAbsoluteMouseReport),  // Use BLE-specific size
   };
   uint16_t out_lens[] = {1};
 
