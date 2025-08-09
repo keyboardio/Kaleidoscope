@@ -37,8 +37,9 @@ void Base<_SpeakerProps>::playTune(const uint16_t *notes, const uint16_t *durati
   memcpy(current_notes_, notes, length * sizeof(uint16_t));
   memcpy(current_durations_, durations, length * sizeof(uint16_t));
   current_length_ = length;
-  current_index_  = 0;
-  next_note_time_ = 0;
+  current_index_ = 0;
+
+  playNextTone();
 }
 
 template<typename _SpeakerProps>
@@ -51,27 +52,26 @@ void Base<_SpeakerProps>::stopTune() {
 
 template<typename _SpeakerProps>
 void Base<_SpeakerProps>::update() {
-  if (current_length_ == 0 || current_index_ >= current_length_)
+  if (current_length_ == 0)
     return;
 
   uint32_t now = millis();
   if (now < next_note_time_)
     return;
 
-  if (next_note_time_ == 0) {
-    // Start playing the first note
-    playTone(current_notes_[current_index_], current_durations_[current_index_]);
-    next_note_time_ = now + current_durations_[current_index_];
-  } else {
-    // Move to next note
-    current_index_++;
-    if (current_index_ < current_length_) {
-      playTone(current_notes_[current_index_], current_durations_[current_index_]);
-      next_note_time_ = now + current_durations_[current_index_];
-    } else {
-      stopTune();
-    }
+  if (current_index_ >= current_length_) {
+    stopTune();
+    return;
   }
+  
+  playNextTone();
+}
+
+template<typename _SpeakerProps>
+void Base<_SpeakerProps>::playNextTone() {
+  playTone(current_notes_[current_index_], current_durations_[current_index_]);
+  next_note_time_ = millis() + current_durations_[current_index_];
+  current_index_++;
 }
 
 template class Base<BaseProps>;
