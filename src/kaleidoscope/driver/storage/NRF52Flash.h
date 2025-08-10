@@ -311,18 +311,18 @@ class StorageFileManager {
 
     if (file_.isOpen()) file_.close();
 
-    // Use appropriate open mode based on file existence
-    bool file_exists = InternalFS.exists(path);
-    if (!file_.open(path,
-                    file_exists ? Adafruit_LittleFS_Namespace::FILE_O_OVERWRITE : Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
-      STORAGE_DEBUG_TRACE("Failed to open page file for writing");
-      return false;
+    // Remove existing file first to avoid seek/truncate corruption issues
+    // This prevents LittleFS corruption during BLE disconnections
+    if (InternalFS.exists(path)) {
+      if (!InternalFS.remove(path)) {
+        STORAGE_DEBUG_TRACE("Failed to remove existing page file");
+        return false;
+      }
     }
 
-    // If file exists, seek to beginning
-    if (file_exists && !file_.seek(0)) {
-      STORAGE_DEBUG_TRACE("Failed to seek to start of file");
-      file_.close();
+    // Create new file
+    if (!file_.open(path, Adafruit_LittleFS_Namespace::FILE_O_WRITE)) {
+      STORAGE_DEBUG_TRACE("Failed to open page file for writing");
       return false;
     }
 
