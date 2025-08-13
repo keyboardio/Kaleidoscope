@@ -432,6 +432,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * the standard GPIOTE interrupt handler as it's already used by the Arduino
    * core. Instead, we use PPI to route PORT events to a separate interrupt.
    */
+
   static void setupGPIOTE() {
     // Configure each column pin for sense detection
     for (uint8_t i = 0; i < KeyScannerProps::matrix_columns; i++) {
@@ -630,8 +631,8 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    */
   bool shouldEnterDeepSleep() {
     uint32_t now = millis();
-    // Never sleep if USB is connected
-    if (mcu().USBConfigured()) {
+    // Never sleep if USB power is connected
+    if (mcu().USBPowerDetected()) {
       return false;
     }
     if (keyScanner().pressedKeyswitchCount()) {
@@ -729,7 +730,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       last_battery_check_time_ = now;
 
       // Only check thresholds if running on battery
-      if (!mcu().USBConfigured()) {
+      if (!mcu().USBPowerDetected()) {
         // Check for shutdown threshold
         if (isBatteryBelowShutdownThreshold(voltage_mv)) {
           battery_status_ = BatteryStatus::Shutdown;
@@ -835,17 +836,19 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     if (input_event_pending_) {
       input_event_pending_ = false;
       last_activity_time_  = now;  // Update activity time on GPIOTE event
+    }
+    
 
-    } else if (shouldEnterDeepSleep()) {
+    if (shouldEnterDeepSleep()) {
       // Check if we should enter deep sleep
       // Only enter deep sleep if no keys are pressed and we're not connected via USB
       enterDeepSleep();
     }
 
-    // In the future, this should run in response to a USB connect/disconnect event rather than on every cycle
-    // Enabling this method will cause the device to automatically switch to USB mode if it's connected to
-    // a USB host, even if the user is explicitlytrying to connect to a bluetooth host
-    // autoHostConnectionMode();
+    // Note: USB connection state is now tracked via event-driven callbacks in nRF52840.cpp
+    // Enabling autoHostConnectionMode() will cause the device to automatically change host mode
+    // when USB cable state changes, even if the user is explicitly trying to connect to a bluetooth host
+    autoHostConnectionMode();
   }
 
 
@@ -904,7 +907,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
   Stream &serialPort() {
     return Serial;  // For now, we *always* use USB Serial
-    if (getHostConnectionMode() == MODE_USB && mcu().USBConfigured()) {
+    if (getHostConnectionMode() == MODE_USB && mcu().USBDataConnected()) {
       return Serial;
     } else {
       return ble().serialPort();
