@@ -585,12 +585,12 @@ class Base {
     if (!isHybridHostConnection()) {
       return;
     }
-    if (host_connection_mode_ == MODE_BLE && mcu_.USBConfigured()) {
+    if (host_connection_mode_ == MODE_BLE && mcu_.USBDataConnected()) {
       if (!ble_.connected() || primary_host_connection_mode_ == MODE_USB) {
         setHostConnectionMode(MODE_USB);
       }
     } else if (host_connection_mode_ == MODE_USB && ble_.connected()) {
-      if (!mcu_.USBConfigured() || primary_host_connection_mode_ == MODE_BLE) {
+      if (!mcu_.USBDataConnected() || primary_host_connection_mode_ == MODE_BLE) {
         setHostConnectionMode(MODE_BLE);
       }
     }
