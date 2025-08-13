@@ -63,6 +63,7 @@ class USBAutoSwitcher : public kaleidoscope::Plugin {
 
   // Plugin hooks
   EventHandlerResult onSetup();
+  EventHandlerResult afterEachCycle();
   EventHandlerResult onHostConnectionStatusChanged(uint8_t device_id, HostConnectionStatus status);
 
  private:
