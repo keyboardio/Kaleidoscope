@@ -48,8 +48,6 @@ KeyAddr LEDIndicators::slot_leds[MAX_SLOTS] = {
 // Initialize static indicator array
 kaleidoscope::plugin::LEDIndicators::Indicator LEDIndicators::indicators_[MAX_SLOTS] = {};
 
-// Initialize USB check flag
-bool LEDIndicators::initial_usb_check_done_ = false;
 
 // Setup the plugin
 EventHandlerResult LEDIndicators::onSetup() {
@@ -144,9 +142,6 @@ EventHandlerResult LEDIndicators::beforeSyncingLeds() {
     return EventHandlerResult::OK;
   }
 
-  // Check for USB power-only scenario on startup (once)
-  checkUSBPowerOnlyStatus();
-
   // Update and apply all active indicators
   for (uint8_t i = 0; i < MAX_SLOTS; i++) {
     if (indicators_[i].active) {
@@ -237,31 +232,6 @@ cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
 
   default:
     return indicator.color1;
-  }
-}
-
-// Check if USB has power but no data connection
-bool LEDIndicators::isUSBPowerOnly() {
-  return Runtime.device().mcu().USBPowerDetected() && !Runtime.device().mcu().USBDataConnected();
-}
-
-// Handle USB power-only detection on startup
-void LEDIndicators::checkUSBPowerOnlyStatus() {
-  if (initial_usb_check_done_) {
-    return;  // Already checked
-  }
-  
-  // Delay check slightly to let USB initialization complete
-  if (Runtime.millisAtCycleStart() < 2000) {
-    return;  // Too early to check reliably
-  }
-  
-  initial_usb_check_done_ = true;
-  
-  if (isUSBPowerOnly()) {
-    // USB power only (no data) detected at startup
-    // Manually trigger the Connecting event for device 0 (USB)
-    onHostConnectionStatusChanged(0, HostConnectionStatus::Connecting);
   }
 }
 

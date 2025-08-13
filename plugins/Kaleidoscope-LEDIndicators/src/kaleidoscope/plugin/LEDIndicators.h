@@ -149,18 +149,6 @@ class LEDIndicators : public kaleidoscope::Plugin {
   EventHandlerResult onPowerEvent(PowerEvent event, uint16_t voltage_mv);
 
  private:
-  /**
-   * @brief Check if USB has power but no data connection
-   * @return true if USB power is detected but no data connection
-   */
-  bool isUSBPowerOnly();
-  
-  /**
-   * @brief Handle USB power-only detection on startup
-   */
-  void checkUSBPowerOnlyStatus();
-  
-  static bool initial_usb_check_done_;
   static constexpr uint8_t MAX_SLOTS = 8;  // Maximum number of slots supported
   static uint8_t num_indicator_slots;      // Number of slots configured
   static KeyAddr slot_leds[MAX_SLOTS];     // LED mapping for slots

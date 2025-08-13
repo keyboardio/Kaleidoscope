@@ -292,6 +292,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   static uint32_t last_activity_time_;                     // Used for deep sleep
   static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 2000;  // Enter deep sleep after 10s
   static volatile bool input_event_pending_;
+  static bool initial_usb_check_done_;                     // Track if we've checked USB power-only on startup
   static uint32_t last_battery_update_;                        // Last battery level update time
   static constexpr uint32_t BATTERY_UPDATE_INTERVAL = 300000;  // 5 minutes in milliseconds
 
@@ -843,6 +844,9 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // TODO(jesse): move this into a hook
     updateSpeaker();
 
+    // Check for USB power-only state on startup (once after 2 seconds)
+    checkUSBPowerOnlyStatus();
+
     // Manage LED power based on LED activity
     if (ledDriver().areAnyLEDsOn() || ((now - ledDriver().LEDsLastOn()) < 1000)) {
       enableLEDPower();
@@ -899,6 +903,29 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
   }
 
 
+  /**
+   * @brief Check for USB power-only status on startup and trigger LED indication
+   */
+  void checkUSBPowerOnlyStatus() {
+    if (initial_usb_check_done_) {
+      return;  // Already checked
+    }
+    
+    // Delay check slightly to let USB initialization complete
+    if (millis() < 2000) {
+      return;  // Too early to check reliably
+    }
+    
+    initial_usb_check_done_ = true;
+    
+    // Check if we have USB power but no data connection
+    if (mcu().USBPowerDetected() && !mcu().USBDataConnected()) {
+      // USB power only (no data) detected at startup
+      // Trigger the Connecting event for device 0 (USB) which will show orange LEDs
+      kaleidoscope::Runtime.handleHostConnectionStatusChanged(0, kaleidoscope::HostConnectionStatus::Connecting);
+    }
+  }
+
   void initializeSerialForDebugging() {
     Serial.begin(9600);
     while (!Serial) {
@@ -938,6 +965,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     warning_active_          = false;
     shutdown_active_         = false;
     battery_status_          = BatteryStatus::Normal;
+    initial_usb_check_done_  = false;
     updateBatteryLevel();
   }
 
