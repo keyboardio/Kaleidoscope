@@ -7,6 +7,30 @@
 #include "kaleidoscope/driver/mcu/nRF52840.h"
 #include "kaleidoscope/hooks.h"
 #include "kaleidoscope/host_connection_status.h"
+#include <Arduino.h>
+
+// Debug speaker pin - PIN_SPEAKER is 18 on Preonic
+#define DEBUG_SPEAKER_PIN 18
+
+/**
+ * @brief Configure speaker pin using Arduino functions
+ */
+static void setupDebugSpeaker() {
+  pinMode(DEBUG_SPEAKER_PIN, OUTPUT);
+}
+
+/**
+ * @brief Play multiple debug tones with gaps using Arduino tone()
+ * @param count Number of tones to play
+ */
+static void playDebugTones(uint8_t count) {
+  setupDebugSpeaker();
+  
+  for (uint8_t i = 0; i < count; i++) {
+    tone(DEBUG_SPEAKER_PIN, 1000, 200);  // 1kHz tone for 200ms
+    delay(250);  // Wait for tone to finish plus gap
+  }
+}
 
 // TinyUSB callbacks must be in global scope with C linkage
 extern "C" {

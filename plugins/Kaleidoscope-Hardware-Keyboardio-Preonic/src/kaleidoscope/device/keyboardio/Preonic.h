@@ -432,6 +432,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * the standard GPIOTE interrupt handler as it's already used by the Arduino
    * core. Instead, we use PPI to route PORT events to a separate interrupt.
    */
+  
+  /**
+   * @brief Configure USB VBUS detection for wake-from-sleep
+   * @details Uses SoftDevice API to enable hardware VBUS detection
+   */
+  static void setupUSBWakeForSleep();
 
   static void setupGPIOTE() {
     // Configure each column pin for sense detection
@@ -584,6 +590,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     prepareMatrixForSleep();
     configureColumnsForSensing();
     setupGPIOTE();
+    setupUSBWakeForSleep();
     speaker().prepareForSleep();
 
     // Bluefruit hid - process all queue reports, then shut down processing
@@ -600,6 +607,12 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
 
     while (!input_event_pending_) {
       waitForEvent();
+      // Check if USB was connected while sleeping
+      // SoftDevice's USB detection interrupt wakes us briefly from waitForEvent()
+      // We use this wake to check USB status - if connected, exit sleep
+      if (NRF_POWER->USBREGSTATUS & POWER_USBREGSTATUS_VBUSDETECT_Msk) {
+        input_event_pending_ = true;
+      }
     }
 
     sd_power_mode_set(NRF_POWER_MODE_CONSTLAT);
@@ -800,6 +813,28 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
  public:
   Preonic() {
   }
+  
+  /**
+   * @brief Handle USB connection status changes for wake-from-sleep
+   * @details This provides a safe way to detect USB connections that can wake the device
+   */
+  kaleidoscope::EventHandlerResult onHostConnectionStatusChanged(uint8_t device_id, kaleidoscope::HostConnectionStatus status) {
+    // Device 0 is USB - wake handling for data connections
+    if (device_id == 0) {
+      switch (status) {
+        case kaleidoscope::HostConnectionStatus::Connected:
+          // USB data connection established - signal activity
+          input_event_pending_ = true;
+          last_activity_time_ = millis();
+          break;
+        case kaleidoscope::HostConnectionStatus::Connecting:
+        case kaleidoscope::HostConnectionStatus::Disconnected:
+          // These are handled at the power event level
+          break;
+      }
+    }
+    return kaleidoscope::EventHandlerResult::OK;
+  }
 
 
   void betweenCycles() {
@@ -838,6 +873,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       last_activity_time_  = now;  // Update activity time on GPIOTE event
     }
     
+    
 
     if (shouldEnterDeepSleep()) {
       // Check if we should enter deep sleep
@@ -848,7 +884,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Note: USB connection state is now tracked via event-driven callbacks in nRF52840.cpp
     // Enabling autoHostConnectionMode() will cause the device to automatically change host mode
     // when USB cable state changes, even if the user is explicitly trying to connect to a bluetooth host
-    autoHostConnectionMode();
+    // autoHostConnectionMode();
   }
 
 
