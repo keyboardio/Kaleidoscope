@@ -300,11 +300,16 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
       }
       break;
     case HostConnectionStatus::Disconnected:
-      // USB fully disconnected - clear indicators on all LEDs
+      // USB fully disconnected - show red shrink effect on all LEDs
       for (uint8_t i = 0; i < num_indicator_slots; i++) {
         KeyAddr led_addr = getLEDForSlot(i);
         if (led_addr.isValid()) {
-          clearIndicator(led_addr);
+          showIndicator(led_addr,
+                        IndicatorEffect::Shrink,
+                        color_red,
+                        color_off,
+                        2000,  // 2 second duration
+                        1);    // 1 cycle
         }
       }
       break;

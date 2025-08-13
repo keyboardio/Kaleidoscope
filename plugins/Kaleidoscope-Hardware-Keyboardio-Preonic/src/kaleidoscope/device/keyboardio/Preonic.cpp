@@ -35,6 +35,9 @@
 #include "nrf_gpio.h"
 #include "nrf_nvmc.h"
 
+// SoftDevice includes for safe USB power detection
+#include "nrf_soc.h"
+
 // No nrfx includes needed - using direct register access for reliable shutdown
 
 // Pin number definition (Should be provided by BSP)
@@ -512,6 +515,24 @@ void disablePWMForSleep() {
   NRF_PWM3->ENABLE   = 0;
   NRF_PWM3->INTENCLR = 0xFFFFFFFF;
 }
+
+
+/**
+ * @brief Configure USB VBUS detection for wake-from-sleep 
+ * @details Uses SoftDevice API to enable hardware VBUS wake without crashes
+ */
+void Preonic::setupUSBWakeForSleep() {
+  // Use SoftDevice API to enable VBUS detection for wake
+  // This generates NRF_EVT_POWER_USB_DETECTED events that can be handled via sd_evt_get()
+  uint32_t result = sd_power_usbdetected_enable(true);
+  
+  // If SoftDevice call fails, continue without USB wake (key/encoder wake still works)
+  if (result != NRF_SUCCESS) {
+    // Graceful fallback - system will still wake on keys/encoders
+    return;
+  }
+}
+
 
 }  // namespace keyboardio
 }  // namespace device
