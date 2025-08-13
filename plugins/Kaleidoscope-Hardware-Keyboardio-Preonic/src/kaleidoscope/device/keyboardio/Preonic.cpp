@@ -517,4 +517,5 @@ void disablePWMForSleep() {
 }  // namespace device
 }  // namespace kaleidoscope
 
-#endif /* ARDUINO_ARCH_NRF52 */
+
+#endif /* ARDUINO_PREONIC */
