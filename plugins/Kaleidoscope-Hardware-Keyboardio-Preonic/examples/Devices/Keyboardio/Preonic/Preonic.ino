@@ -60,6 +60,9 @@
 // Support for showing device status with the LED Indicators
 #include "Kaleidoscope-LEDIndicators.h"
 
+// Support for automatic USB/BLE device switching
+#include "Kaleidoscope-USBAutoSwitcher.h"
+
 
 /** This 'enum' is a list of all the macros used by the Model 100's firmware
   * The names aren't particularly important. What is important is that each
@@ -311,7 +314,11 @@ KALEIDOSCOPE_INIT_PLUGINS(
   Keyclick,
   // LEDIndicators shows device status indicators using the LEDs
   // It should be listed after all other LED plugins
-  LEDIndicators);
+  LEDIndicators,
+  
+  // USBAutoSwitcher handles automatic switching between USB and BLE
+  // Should be listed after LEDIndicators to see connection status changes
+  USBAutoSwitcher);
 
 
 void configureIndicators() {
