@@ -29,6 +29,7 @@
 #include "Adafruit_TinyUSB.h"
 #include "kaleidoscope/driver/mcu/Base.h"  // for Base, BaseProps
 #include <Wire.h>
+#include "nrf_power.h"
 namespace kaleidoscope {
 namespace driver {
 namespace mcu {
@@ -40,6 +41,7 @@ struct nRF52840Props : public kaleidoscope::driver::mcu::BaseProps {
 template<typename _Props>
 class nRF52840 : public kaleidoscope::driver::mcu::Base<_Props> {
  public:
+  static constexpr uint8_t USB_DEVICE_ID = 0;
   void detachFromHost() {
     TinyUSBDevice.detach();
   }
@@ -57,7 +59,64 @@ class nRF52840 : public kaleidoscope::driver::mcu::Base<_Props> {
     (void)hook;
   }
 
+  /**
+   * @brief Check if USB data connection is active
+   * @return true if USB is configured and ready for data transfer
+   */
+  bool USBDataConnected() {
+    return usb_data_connected_;
+  }
+
+  /**
+   * @brief Check if USB power (VBUS) is detected
+   * @return true if USB cable is plugged in (power present)
+   */
+  bool USBPowerDetected() {
+    uint32_t usb_reg = NRF_POWER->USBREGSTATUS;
+    return (usb_reg & POWER_USBREGSTATUS_VBUSDETECT_Msk) != 0;
+  }
+
+  /**
+   * @brief Check if USB regulator is ready
+   * @return true if USB 3.3V regulator is stable and ready
+   */
+  bool USBRegulatorReady() {
+    uint32_t usb_reg = NRF_POWER->USBREGSTATUS;
+    return (usb_reg & POWER_USBREGSTATUS_OUTPUTRDY_Msk) != 0;
+  }
+
+  /**
+   * @brief Initialize USB connection detection
+   */
   void setup() {
+    // Set initial USB connection state based on current hardware status
+    usb_data_connected_ = TinyUSBDevice.mounted();
+    
+    // Set up static pointer for callback access
+    instance_ = this;
+  }
+
+  /**
+   * @brief Broadcast USB connection state change
+   */
+  static void broadcastUSBState(bool connected);
+
+  /**
+   * @brief Static method for TinyUSB mount callback access
+   */
+  static void handleUSBMount() {
+    if (instance_) {
+      instance_->usb_data_connected_ = true;
+    }
+  }
+
+  /**
+   * @brief Static method for TinyUSB unmount callback access
+   */
+  static void handleUSBUnmount() {
+    if (instance_) {
+      instance_->usb_data_connected_ = false;
+    }
   }
 
   /**
@@ -400,6 +459,10 @@ class nRF52840 : public kaleidoscope::driver::mcu::Base<_Props> {
  private:
   static TimerState timer_state_;
   static TWIState twi_state_;
+  
+  // USB connection state tracking
+  static bool usb_data_connected_;
+  static nRF52840<_Props>* instance_;  // Static instance pointer for callback access
 };
 
 template<typename _Props>
@@ -407,6 +470,12 @@ typename nRF52840<_Props>::TimerState nRF52840<_Props>::timer_state_;
 
 template<typename _Props>
 typename nRF52840<_Props>::TWIState nRF52840<_Props>::twi_state_;
+
+template<typename _Props>
+bool nRF52840<_Props>::usb_data_connected_ = false;
+
+template<typename _Props>
+nRF52840<_Props>* nRF52840<_Props>::instance_ = nullptr;
 
 #else
 template<typename _Props>
