@@ -41,6 +41,27 @@ EventHandlerResult USBAutoSwitcher::onSetup() {
   // Initialize current mode tracking
   current_host_mode_ = getCurrentHostMode();
   
+  // If no USB detected at startup, we'll need to check after delay
+  // For now, we'll use afterEachCycle but only until startup_switch_done_
+  
+  return EventHandlerResult::OK;
+}
+
+EventHandlerResult USBAutoSwitcher::afterEachCycle() {
+  // Immediate return after startup switching is done - minimal overhead
+  if (startup_switch_done_) {
+    return EventHandlerResult::OK;
+  }
+  
+  // Only during first second of operation
+  if ((Runtime.millisAtCycleStart() - startup_time_) >= startup_delay_ms_) {
+    // Check USB status once and switch if needed
+    if (!Runtime.device().mcu().USBPowerDetected()) {
+      switchToFallbackBLE();
+    }
+    startup_switch_done_ = true;
+  }
+  
   return EventHandlerResult::OK;
 }
 
@@ -53,6 +74,7 @@ EventHandlerResult USBAutoSwitcher::onHostConnectionStatusChanged(uint8_t device
         if (current_host_mode_ != MODE_USB) {
           switchToUSB();
         }
+        startup_switch_done_ = true; // Cancel any pending startup switch
         break;
         
       case HostConnectionStatus::Disconnected:

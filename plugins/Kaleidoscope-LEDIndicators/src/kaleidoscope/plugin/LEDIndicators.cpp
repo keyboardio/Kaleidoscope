@@ -286,16 +286,16 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
       }
       break;
     case HostConnectionStatus::Connected:
-      // USB data connection established - pulse green 3 times on all LEDs
+      // USB data connection established - fade up green on all LEDs
       for (uint8_t i = 0; i < num_indicator_slots; i++) {
         KeyAddr led_addr = getLEDForSlot(i);
         if (led_addr.isValid()) {
           showIndicator(led_addr,
-                        IndicatorEffect::Pulse,
+                        IndicatorEffect::Grow,
                         color_green,
                         color_off,
-                        1200,  // 3 pulses at 400ms each
-                        3);
+                        1000,  // 1 second fade up
+                        1);
         }
       }
       break;
