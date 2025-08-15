@@ -110,6 +110,23 @@ class LEDIndicators : public kaleidoscope::Plugin {
                      cRGB color2            = {0, 0, 0},
                      uint16_t duration_ms   = 0,
                      uint16_t effect_cycles = 0);
+  
+  /** @brief Show a temporary indicator with delay and duration
+   * @param key_addr The LED index to control
+   * @param effect The type of visual effect to show
+   * @param color1 Primary color for the effect
+   * @param color2 Secondary color for effects that use two colors
+   * @param duration_ms How long to show the indicator (0 for indefinite)
+   * @param delay_ms How long to wait before showing the indicator
+   * @param effect_cycles Number of times to repeat the effect
+   */
+  void showIndicatorWithDelay(KeyAddr key_addr,
+                              IndicatorEffect effect,
+                              cRGB color1,
+                              cRGB color2,
+                              uint16_t duration_ms,
+                              uint16_t delay_ms,
+                              uint16_t effect_cycles = 0);
 
   /** @brief Clear a specific indicator
    * @param key_addr The LED index to clear
@@ -161,6 +178,7 @@ class LEDIndicators : public kaleidoscope::Plugin {
     IndicatorEffect effect;
     uint32_t start_time;
     uint16_t duration_ms;
+    uint16_t delay_ms;      // Delay before showing the indicator
     uint16_t effect_cycles;
     uint32_t last_update;
     uint16_t current_cycle;

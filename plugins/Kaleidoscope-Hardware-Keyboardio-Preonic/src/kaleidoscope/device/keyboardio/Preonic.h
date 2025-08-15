@@ -290,7 +290,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
  private:
   // Deep sleep timers
   static uint32_t last_activity_time_;                     // Used for deep sleep
-  static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 2000;  // Enter deep sleep after 10s
+  static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 10000;  // Enter deep sleep after 10s
   static volatile bool input_event_pending_;
   static uint32_t last_battery_update_;                        // Last battery level update time
   static constexpr uint32_t BATTERY_UPDATE_INTERVAL = 300000;  // 5 minutes in milliseconds
