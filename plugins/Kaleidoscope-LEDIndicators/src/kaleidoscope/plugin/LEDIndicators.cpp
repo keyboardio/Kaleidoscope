@@ -104,6 +104,7 @@ void LEDIndicators::showIndicator(KeyAddr led_addr,
   indicators_[slot].color2        = color2;
   indicators_[slot].start_time    = Runtime.millisAtCycleStart();
   indicators_[slot].duration_ms   = duration_ms;
+  indicators_[slot].delay_ms      = 0;  // No delay by default
   indicators_[slot].effect_cycles = effect_cycles;
   indicators_[slot].current_cycle = 0;
   indicators_[slot].last_update   = Runtime.millisAtCycleStart();
@@ -112,6 +113,48 @@ void LEDIndicators::showIndicator(KeyAddr led_addr,
   updateIndicator(slot);
 }
 
+// Show a temporary indicator with delay
+void LEDIndicators::showIndicatorWithDelay(KeyAddr led_addr,
+                                           IndicatorEffect effect,
+                                           cRGB color1,
+                                           cRGB color2,
+                                           uint16_t duration_ms,
+                                           uint16_t delay_ms,
+                                           uint16_t effect_cycles) {
+  if (!Runtime.has_leds) {
+    return;
+  }
+  if (!led_addr.isValid()) {
+    return;
+  }
+
+  // Find an available indicator slot - but DON'T check for matching key_addr
+  // since we want delayed indicators to not block the LED until they activate
+  uint8_t slot = 0xFF;
+  for (uint8_t i = 0; i < MAX_SLOTS; i++) {
+    if (!indicators_[i].active) {
+      slot = i;
+      break;
+    }
+  }
+
+  if (slot == 0xFF) {
+    return;
+  }
+
+  // Set up the indicator with delay
+  indicators_[slot].active        = true;
+  indicators_[slot].key_addr      = led_addr;
+  indicators_[slot].effect        = effect;
+  indicators_[slot].color1        = color1;
+  indicators_[slot].color2        = color2;
+  indicators_[slot].start_time    = Runtime.millisAtCycleStart();
+  indicators_[slot].duration_ms   = duration_ms;
+  indicators_[slot].delay_ms      = delay_ms;
+  indicators_[slot].effect_cycles = effect_cycles;
+  indicators_[slot].current_cycle = 0;
+  indicators_[slot].last_update   = Runtime.millisAtCycleStart();
+}
 
 // Clear a specific indicator
 void LEDIndicators::clearIndicator(KeyAddr key_addr) {
@@ -145,8 +188,18 @@ EventHandlerResult LEDIndicators::beforeSyncingLeds() {
   // Update and apply all active indicators
   for (uint8_t i = 0; i < MAX_SLOTS; i++) {
     if (indicators_[i].active) {
-      if (indicators_[i].duration_ms > 0 &&
-          (Runtime.millisAtCycleStart() - indicators_[i].start_time >= indicators_[i].duration_ms)) {
+      uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
+      
+      // Check if we're still in the delay period
+      if (elapsed < indicators_[i].delay_ms) {
+        // During delay, don't update the LED at all - let other indicators use it
+        continue;
+      }
+      
+      // Adjust elapsed time to account for delay
+      uint32_t effective_elapsed = elapsed - indicators_[i].delay_ms;
+      
+      if (indicators_[i].duration_ms > 0 && effective_elapsed >= indicators_[i].duration_ms) {
         indicators_[i].active = false;
         ::LEDControl.refreshAt(indicators_[i].key_addr);
       } else {
@@ -175,6 +228,12 @@ void LEDIndicators::updateIndicator(uint8_t index) {
 // Compute the current color for an indicator based on its effect
 cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
   uint32_t elapsed = Runtime.millisAtCycleStart() - indicator.start_time;
+  
+  // Account for delay - effects start after the delay period
+  if (elapsed < indicator.delay_ms) {
+    return color_off;  // Don't show anything during delay
+  }
+  elapsed -= indicator.delay_ms;
 
   switch (indicator.effect) {
   case IndicatorEffect::Blink: {
@@ -257,6 +316,14 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
       break;
     case HostConnectionStatus::Connected:
       // USB data connection established - fade up green on all LEDs
+      // First clear any existing indicators to ensure all LEDs show green
+      for (uint8_t i = 0; i < num_indicator_slots; i++) {
+        KeyAddr led_addr = getLEDForSlot(i);
+        if (led_addr.isValid()) {
+          clearIndicator(led_addr);
+        }
+      }
+      // Now show green on all LEDs
       for (uint8_t i = 0; i < num_indicator_slots; i++) {
         KeyAddr led_addr = getLEDForSlot(i);
         if (led_addr.isValid()) {
@@ -264,13 +331,21 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                         IndicatorEffect::Grow,
                         color_green,
                         color_off,
-                        1000,  // 1 second fade up
+                        1000,  // 1 second duration
                         1);
         }
       }
       break;
     case HostConnectionStatus::Disconnected:
       // USB fully disconnected - show red shrink effect on all LEDs
+      // First clear any existing indicators
+      for (uint8_t i = 0; i < num_indicator_slots; i++) {
+        KeyAddr led_addr = getLEDForSlot(i);
+        if (led_addr.isValid()) {
+          clearIndicator(led_addr);
+        }
+      }
+      // Now show red on all LEDs
       for (uint8_t i = 0; i < num_indicator_slots; i++) {
         KeyAddr led_addr = getLEDForSlot(i);
         if (led_addr.isValid()) {
@@ -278,7 +353,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                         IndicatorEffect::Shrink,
                         color_red,
                         color_off,
-                        2000,  // 2 second duration
+                        1000,  // 1 second duration
                         1);    // 1 cycle
         }
       }
@@ -294,20 +369,22 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
   uint8_t slot = device_id - 1;
   switch (status) {
   case HostConnectionStatus::Connecting:
-    showIndicator(getLEDForSlot(slot),
-                  IndicatorEffect::Blink,
-                  color_blue,
-                  color_off,
-                  30000,  // 30 second duration
-                  10);    // 10 cycles
+    showIndicatorWithDelay(getLEDForSlot(slot),
+                           IndicatorEffect::Blink,
+                           color_blue,
+                           color_off,
+                           30000,  // 30 second duration
+                           1500,   // 1.5 second delay to let USB indicators finish
+                           10);    // 10 cycles
     break;
   case HostConnectionStatus::Connected:
-    showIndicator(getLEDForSlot(slot),
-                  IndicatorEffect::Grow,
-                  color_blue,
-                  color_off,
-                  5000,  // 5 second duration
-                  1);    // 1 cycle
+    showIndicatorWithDelay(getLEDForSlot(slot),
+                           IndicatorEffect::Grow,
+                           color_blue,
+                           color_off,
+                           5000,  // 5 second duration
+                           1500,  // 1.5 second delay to let USB indicators finish
+                           1);    // 1 cycle
     break;
   case HostConnectionStatus::PairingFailed:
     showIndicator(getLEDForSlot(slot),
@@ -318,12 +395,13 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                   1);     // 1 cycle
     break;
   case HostConnectionStatus::Disconnected:
-    showIndicator(getLEDForSlot(slot),
-                  IndicatorEffect::Shrink,
-                  color_blue,
-                  color_off,
-                  5000,  // 5 second duration
-                  1);     // 1 cycle
+    showIndicatorWithDelay(getLEDForSlot(slot),
+                           IndicatorEffect::Shrink,
+                           color_blue,
+                           color_off,
+                           5000,  // 5 second duration
+                           1500,  // 1.5 second delay to let USB indicators show first
+                           1);    // 1 cycle
     break;
   case HostConnectionStatus::PairingSuccess:
     showIndicator(getLEDForSlot(slot),
@@ -334,23 +412,25 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                   1);     // 1 cycle
     break;
   case HostConnectionStatus::DeviceSelected:
-    showIndicator(getLEDForSlot(slot),
-                  IndicatorEffect::Grow,
-                  color_blue,
-                  color_off,
-                  2000,  // 2 second duration
-                  1);    // 1 cycle
+    showIndicatorWithDelay(getLEDForSlot(slot),
+                           IndicatorEffect::Grow,
+                           color_blue,
+                           color_off,
+                           2000,  // 2 second duration
+                           1500,  // 1.5 second delay to let USB indicators finish
+                           1);    // 1 cycle
     break;
   case HostConnectionStatus::DeviceUnselected:
     clearIndicator(getLEDForSlot(slot));
     break;
   case HostConnectionStatus::Advertising:
-    showIndicator(getLEDForSlot(slot),
-                  IndicatorEffect::Blink,
-                  color_blue,
-                  color_off,
-                  30000,  // 30 second duration
-                  10);    // 10 cycles
+    showIndicatorWithDelay(getLEDForSlot(slot),
+                           IndicatorEffect::Blink,
+                           color_blue,
+                           color_off,
+                           30000,  // 30 second duration
+                           1500,   // 1.5 second delay to let USB indicators finish
+                           10);    // 10 cycles
     break;
   default:
     break;
