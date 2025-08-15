@@ -84,7 +84,6 @@ constexpr uint8_t LEDDriverProps::key_led_map[];
 // Initialize static members
 uint32_t Preonic::last_activity_time_       = 0;
 volatile bool Preonic::input_event_pending_ = false;
-bool Preonic::initial_usb_check_done_       = false;
 uint32_t Preonic::last_battery_update_      = 0;  // Initialize to 0 to force first update
 
 // Battery state tracking

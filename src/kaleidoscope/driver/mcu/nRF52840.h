@@ -94,7 +94,17 @@ class nRF52840 : public kaleidoscope::driver::mcu::Base<_Props> {
     
     // Set up static pointer for callback access
     instance_ = this;
+    
+    // Mark that we haven't done the initial USB check yet
+    initial_usb_check_done_ = false;
+    startup_time_ = millis();
   }
+  
+  /**
+   * @brief Check for USB power-only state on startup and trigger LED indication
+   * Should be called periodically early in the device lifecycle
+   */
+  void checkUSBPowerOnlyStatus();
 
   /**
    * @brief Broadcast USB connection state change
@@ -463,6 +473,8 @@ class nRF52840 : public kaleidoscope::driver::mcu::Base<_Props> {
   // USB connection state tracking
   static bool usb_data_connected_;
   static nRF52840<_Props>* instance_;  // Static instance pointer for callback access
+  static bool initial_usb_check_done_;  // Track if we've checked USB power-only on startup
+  static uint32_t startup_time_;        // Track when device was initialized
 };
 
 template<typename _Props>
@@ -476,6 +488,12 @@ bool nRF52840<_Props>::usb_data_connected_ = false;
 
 template<typename _Props>
 nRF52840<_Props>* nRF52840<_Props>::instance_ = nullptr;
+
+template<typename _Props>
+bool nRF52840<_Props>::initial_usb_check_done_ = false;
+
+template<typename _Props>
+uint32_t nRF52840<_Props>::startup_time_ = 0;
 
 #else
 template<typename _Props>
