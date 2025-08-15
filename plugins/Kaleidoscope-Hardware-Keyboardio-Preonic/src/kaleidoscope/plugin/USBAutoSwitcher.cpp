@@ -128,6 +128,11 @@ void USBAutoSwitcher::switchToFallbackBLE() {
 }
 
 void USBAutoSwitcher::switchToUSB() {
+  // Disconnect from BLE if connected
+  if (Runtime.device().ble().connected()) {
+    Runtime.device().ble().disconnect();
+  }
+  
   // Switch to USB mode
   Runtime.device().setHostConnectionMode(MODE_USB);
   current_host_mode_ = MODE_USB;

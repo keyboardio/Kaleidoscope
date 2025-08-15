@@ -324,8 +324,18 @@ void BLEBluefruit::selectDevice(uint8_t device_id) {
     Bluefruit.setName(name_buffer);
     Hooks::onHostConnectionStatusChanged(device_id, kaleidoscope::HostConnectionStatus::DeviceSelected);
     current_device_id = device_id;
+    startConnectableAdvertising();
+  } else {
+    // Already on the requested device
+    DEBUG_BLE_MSG("Already on device ", device_id);
+    // Only start advertising if not already connected
+    if (!Bluefruit.Periph.connected()) {
+      DEBUG_BLE_MSG("Not connected, starting advertising");
+      startConnectableAdvertising();
+    } else {
+      DEBUG_BLE_MSG("Already connected to device ", device_id);
+    }
   }
-  startConnectableAdvertising();
 
   DEBUG_BLE_MSG(" ====== Device Selection Complete ======\n");
 }

@@ -310,12 +310,19 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                   1);    // 1 cycle
     break;
   case HostConnectionStatus::PairingFailed:
-  case HostConnectionStatus::Disconnected:
     showIndicator(getLEDForSlot(slot),
                   IndicatorEffect::Shrink,
                   color_red,
                   color_off,
                   10000,  // 10 second duration
+                  1);     // 1 cycle
+    break;
+  case HostConnectionStatus::Disconnected:
+    showIndicator(getLEDForSlot(slot),
+                  IndicatorEffect::Shrink,
+                  color_blue,
+                  color_off,
+                  5000,  // 5 second duration
                   1);     // 1 cycle
     break;
   case HostConnectionStatus::PairingSuccess:
