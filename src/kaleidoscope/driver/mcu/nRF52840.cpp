@@ -76,8 +76,30 @@ void nRF52840<_Props>::broadcastUSBState(bool connected) {
   }
 }
 
+template<typename _Props>
+void nRF52840<_Props>::checkUSBPowerOnlyStatus() {
+  if (initial_usb_check_done_) {
+    return;  // Already checked
+  }
+  
+  // Delay check slightly to let USB initialization complete
+  if ((millis() - startup_time_) < 2000) {
+    return;  // Too early to check reliably
+  }
+  
+  initial_usb_check_done_ = true;
+  
+  // Check if we have USB power but no data connection
+  if (USBPowerDetected() && !USBDataConnected()) {
+    // USB power only (no data) detected at startup
+    // Trigger the Connecting event for device 0 (USB) which will show orange LEDs
+    kaleidoscope::Hooks::onHostConnectionStatusChanged(USB_DEVICE_ID, kaleidoscope::HostConnectionStatus::Connecting);
+  }
+}
+
 // Explicit template instantiation  
 template void nRF52840<nRF52840Props>::broadcastUSBState(bool);
+template void nRF52840<nRF52840Props>::checkUSBPowerOnlyStatus();
 
 } // namespace mcu
 } // namespace driver
