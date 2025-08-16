@@ -337,7 +337,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
       }
       break;
     case HostConnectionStatus::Disconnected:
-      // USB fully disconnected - show red shrink effect on all LEDs
+      // USB fully disconnected - show orange shrink effect on all LEDs
       // First clear any existing indicators
       for (uint8_t i = 0; i < num_indicator_slots; i++) {
         KeyAddr led_addr = getLEDForSlot(i);
@@ -345,13 +345,13 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
           clearIndicator(led_addr);
         }
       }
-      // Now show red on all LEDs
+      // Now show orange on all LEDs (less alarming than red)
       for (uint8_t i = 0; i < num_indicator_slots; i++) {
         KeyAddr led_addr = getLEDForSlot(i);
         if (led_addr.isValid()) {
           showIndicator(led_addr,
                         IndicatorEffect::Shrink,
-                        color_red,
+                        color_orange,
                         color_off,
                         1000,  // 1 second duration
                         1);    // 1 cycle
@@ -378,6 +378,8 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            10);    // 10 cycles
     break;
   case HostConnectionStatus::Connected:
+    // Clear any existing indicators on this slot (like Advertising) before showing Connected
+    clearIndicator(getLEDForSlot(slot));
     showIndicatorWithDelay(getLEDForSlot(slot),
                            IndicatorEffect::Grow,
                            color_blue,
@@ -412,6 +414,8 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                   1);     // 1 cycle
     break;
   case HostConnectionStatus::DeviceSelected:
+    // Clear any previous indicators on this slot before showing DeviceSelected
+    clearIndicator(getLEDForSlot(slot));
     showIndicatorWithDelay(getLEDForSlot(slot),
                            IndicatorEffect::Grow,
                            color_blue,
@@ -424,6 +428,8 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
     clearIndicator(getLEDForSlot(slot));
     break;
   case HostConnectionStatus::Advertising:
+    // Clear any previous indicators on this slot before showing Advertising
+    clearIndicator(getLEDForSlot(slot));
     showIndicatorWithDelay(getLEDForSlot(slot),
                            IndicatorEffect::Blink,
                            color_blue,
