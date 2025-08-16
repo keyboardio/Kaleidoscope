@@ -71,7 +71,7 @@ class Hooks {
   friend class plugin::LEDControl;
   friend class driver::ble::BLEBluefruit;  // Allow BLEBluefruit to trigger hooks
   template<typename _Props>
-  friend class driver::mcu::nRF52840;  // Allow nRF52840 to trigger USB connection hooks
+  friend class driver::mcu::Base;  // Allow MCU drivers to trigger USB connection hooks
   friend void sketch_exploration::pluginsExploreSketch();
 
  private:
