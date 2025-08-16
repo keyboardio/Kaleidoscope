@@ -294,6 +294,21 @@ cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
   }
 }
 
+// Check if any indicators are currently active on the given LEDs
+bool LEDIndicators::hasActiveIndicators(uint8_t start_slot, uint8_t end_slot) {
+  for (uint8_t i = 0; i < MAX_SLOTS; i++) {
+    if (indicators_[i].active) {
+      // Check if this indicator's LED is in the range we're checking
+      for (uint8_t slot = start_slot; slot <= end_slot && slot < num_indicator_slots; slot++) {
+        if (indicators_[i].key_addr == getLEDForSlot(slot)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 // Handle connection status changes
 EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_id, HostConnectionStatus status) {
   // Handle USB connections (device_id 0) specially
@@ -367,6 +382,11 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
 
   // For BLE devices (device_id 1-4), adjust to zero-indexed slot
   uint8_t slot = device_id - 1;
+  
+  // Check if there are any active USB indicators that we need to wait for
+  // USB indicators use all slots, so check all of them
+  uint16_t delay_ms = hasActiveIndicators(0, num_indicator_slots - 1) ? 1500 : 0;
+  
   switch (status) {
   case HostConnectionStatus::Connecting:
     showIndicatorWithDelay(getLEDForSlot(slot),
@@ -374,7 +394,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            color_blue,
                            color_off,
                            30000,  // 30 second duration
-                           1500,   // 1.5 second delay to let USB indicators finish
+                           delay_ms,  // Only delay if USB indicators are active
                            10);    // 10 cycles
     break;
   case HostConnectionStatus::Connected:
@@ -385,7 +405,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            color_blue,
                            color_off,
                            5000,  // 5 second duration
-                           1500,  // 1.5 second delay to let USB indicators finish
+                           delay_ms,  // Only delay if USB indicators are active
                            1);    // 1 cycle
     break;
   case HostConnectionStatus::PairingFailed:
@@ -402,7 +422,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            color_blue,
                            color_off,
                            5000,  // 5 second duration
-                           1500,  // 1.5 second delay to let USB indicators show first
+                           delay_ms,  // Only delay if USB indicators are active
                            1);    // 1 cycle
     break;
   case HostConnectionStatus::PairingSuccess:
@@ -421,7 +441,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            color_blue,
                            color_off,
                            2000,  // 2 second duration
-                           1500,  // 1.5 second delay to let USB indicators finish
+                           delay_ms,  // Only delay if USB indicators are active
                            1);    // 1 cycle
     break;
   case HostConnectionStatus::DeviceUnselected:
@@ -435,7 +455,7 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            color_blue,
                            color_off,
                            30000,  // 30 second duration
-                           1500,   // 1.5 second delay to let USB indicators finish
+                           delay_ms,  // Only delay if USB indicators are active
                            10);    // 10 cycles
     break;
   default:
