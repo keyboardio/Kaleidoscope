@@ -31,6 +31,7 @@
 #include "kaleidoscope/plugin/LEDControl/LEDUtils.h"  // for hsvToRgb
 #include "kaleidoscope/driver/color/GammaCorrection.h"
 #include "kaleidoscope/plugin/LEDEffect-Rainbow.h"  // for LEDRainbowWaveEffect
+#include "kaleidoscope/plugin/LEDIndicators.h"      // for LEDIndicators
 
 namespace kaleidoscope {
 namespace plugin {
@@ -70,17 +71,41 @@ EventHandlerResult PreonicBootGreetingEffect::afterEachCycle() {
 
   // If already done, bail
   if (done_) {
+    // Make sure all LEDs are off after boot greeting is done
+    // Check each cycle in case indicators clear after we're done
+    // Note: The indicators use KeyAddr(0,0) through KeyAddr(0,3) for the 4 LEDs
+    // We need to map our LED indices to those KeyAddr values
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 2))) {  // TOP_LEFT_LED
+      ::LEDControl.setCrgbAt(TOP_LEFT_LED, CRGB(0, 0, 0));
+    }
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 3))) {  // TOP_RIGHT_LED
+      ::LEDControl.setCrgbAt(TOP_RIGHT_LED, CRGB(0, 0, 0));
+    }
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 1))) {  // BOTTOM_LEFT_LED
+      ::LEDControl.setCrgbAt(BOTTOM_LEFT_LED, CRGB(0, 0, 0));
+    }
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 0))) {  // BOTTOM_RIGHT_LED
+      ::LEDControl.setCrgbAt(BOTTOM_RIGHT_LED, CRGB(0, 0, 0));
+    }
     return EventHandlerResult::OK;
   }
 
   // Only run for 'timeout' milliseconds
   if (Runtime.hasTimeExpired(start_time, timeout)) {
     done_ = true;
-    // Turn off all LEDs when done
-    ::LEDControl.setCrgbAt(TOP_LEFT_LED, CRGB(0, 0, 0));
-    ::LEDControl.setCrgbAt(TOP_RIGHT_LED, CRGB(0, 0, 0));
-    ::LEDControl.setCrgbAt(BOTTOM_LEFT_LED, CRGB(0, 0, 0));
-    ::LEDControl.setCrgbAt(BOTTOM_RIGHT_LED, CRGB(0, 0, 0));
+    // Turn off all LEDs when done - but only if no indicators are using them
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 2))) {  // TOP_LEFT_LED
+      ::LEDControl.setCrgbAt(TOP_LEFT_LED, CRGB(0, 0, 0));
+    }
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 3))) {  // TOP_RIGHT_LED
+      ::LEDControl.setCrgbAt(TOP_RIGHT_LED, CRGB(0, 0, 0));
+    }
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 1))) {  // BOTTOM_LEFT_LED
+      ::LEDControl.setCrgbAt(BOTTOM_LEFT_LED, CRGB(0, 0, 0));
+    }
+    if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 0))) {  // BOTTOM_RIGHT_LED
+      ::LEDControl.setCrgbAt(BOTTOM_RIGHT_LED, CRGB(0, 0, 0));
+    }
     ::LEDControl.syncLeds();
     return EventHandlerResult::OK;
   }
@@ -114,16 +139,25 @@ EventHandlerResult PreonicBootGreetingEffect::afterEachCycle() {
     rainbow_mode->update();
   }
 
-  // Now get just our 4 LEDs and set them manually for the butterfly pattern
-  // Top and bottom pairs get different colors from the rainbow
-  cRGB top_left    = ::LEDControl.getCrgbAt(TOP_LEFT_LED);
-  cRGB bottom_left = ::LEDControl.getCrgbAt(BOTTOM_LEFT_LED);
+  // Get a single color from the rainbow effect and use it for all 4 LEDs
+  // This makes it clearer what's happening and avoids confusion
+  cRGB rainbow_color = ::LEDControl.getCrgbAt(TOP_LEFT_LED);
 
-  // Set both sides to match - butterfly wings are symmetric
-  ::LEDControl.setCrgbAt(TOP_LEFT_LED, top_left);
-  ::LEDControl.setCrgbAt(TOP_RIGHT_LED, top_left);
-  ::LEDControl.setCrgbAt(BOTTOM_LEFT_LED, bottom_left);
-  ::LEDControl.setCrgbAt(BOTTOM_RIGHT_LED, bottom_left);
+  // Set all four LEDs to the same rainbow color
+  // But don't overwrite LEDs that have active indicators
+  // The indicators use KeyAddr(0,0) through KeyAddr(0,3) for the 4 LEDs
+  if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 2))) {  // TOP_LEFT_LED (index 2)
+    ::LEDControl.setCrgbAt(TOP_LEFT_LED, rainbow_color);
+  }
+  if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 3))) {  // TOP_RIGHT_LED (index 3)
+    ::LEDControl.setCrgbAt(TOP_RIGHT_LED, rainbow_color);
+  }
+  if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 1))) {  // BOTTOM_LEFT_LED (index 1)
+    ::LEDControl.setCrgbAt(BOTTOM_LEFT_LED, rainbow_color);
+  }
+  if (!::LEDIndicators.hasActiveIndicatorForLED(KeyAddr(0, 0))) {  // BOTTOM_RIGHT_LED (index 0)
+    ::LEDControl.setCrgbAt(BOTTOM_RIGHT_LED, rainbow_color);
+  }
 
   /* BUTTERFLY EFFECT ON HOLD - keeping for later
   uint16_t brightness = 0;
