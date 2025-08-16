@@ -110,7 +110,7 @@ class LEDIndicators : public kaleidoscope::Plugin {
                      cRGB color2            = {0, 0, 0},
                      uint16_t duration_ms   = 0,
                      uint16_t effect_cycles = 0);
-  
+
   /** @brief Show a global indicator that affects all configured slots
    * @param effect The type of visual effect to show
    * @param color1 Primary color for the effect
@@ -123,7 +123,7 @@ class LEDIndicators : public kaleidoscope::Plugin {
                            cRGB color2,
                            uint16_t duration_ms,
                            uint16_t effect_cycles = 0);
-  
+
   /** @brief Show a temporary indicator with delay and duration
    * @param key_addr The LED index to control
    * @param effect The type of visual effect to show
@@ -153,12 +153,12 @@ class LEDIndicators : public kaleidoscope::Plugin {
    * @return true if any global indicators are active and running
    */
   bool hasActiveGlobalIndicator();
-  
+
   /** @brief Get the remaining duration of any active global indicator
    * @return The maximum remaining time in milliseconds, or 0 if no global indicators are active
    */
   uint16_t getGlobalIndicatorRemainingTime();
-  
+
   /** @brief Check if a specific LED has an active indicator
    * @param led_addr The LED to check
    * @return true if the LED has an active indicator (including global indicators)
@@ -207,7 +207,7 @@ class LEDIndicators : public kaleidoscope::Plugin {
     IndicatorEffect effect;
     uint32_t start_time;
     uint16_t duration_ms;
-    uint16_t delay_ms;      // Delay before showing the indicator
+    uint16_t delay_ms;  // Delay before showing the indicator
     uint16_t effect_cycles;
     uint32_t last_update;
     uint16_t current_cycle;

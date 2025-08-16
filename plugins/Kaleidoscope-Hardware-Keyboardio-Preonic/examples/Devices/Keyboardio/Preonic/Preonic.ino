@@ -315,7 +315,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // LEDIndicators shows device status indicators using the LEDs
   // It should be listed after all other LED plugins
   LEDIndicators,
-  
+
   // USBAutoSwitcher handles automatic switching between USB and BLE
   // Should be listed after LEDIndicators to see connection status changes
   USBAutoSwitcher);

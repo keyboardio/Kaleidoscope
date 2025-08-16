@@ -31,10 +31,10 @@ namespace plugin {
 // Initialize static members
 
 cRGB LEDIndicators::color_green  = {0, 255, 0};
-cRGB LEDIndicators::color_red     = {255, 0, 0};
-cRGB LEDIndicators::color_off     = {0, 0, 0};
-cRGB LEDIndicators::color_blue    = {0, 0, 255};
-cRGB LEDIndicators::color_orange  = {255, 165, 0};
+cRGB LEDIndicators::color_red    = {255, 0, 0};
+cRGB LEDIndicators::color_off    = {0, 0, 0};
+cRGB LEDIndicators::color_blue   = {0, 0, 255};
+cRGB LEDIndicators::color_orange = {255, 165, 0};
 
 uint8_t LEDIndicators::num_indicator_slots  = 5;  // Default to 5 slots
 KeyAddr LEDIndicators::slot_leds[MAX_SLOTS] = {
@@ -238,21 +238,21 @@ EventHandlerResult LEDIndicators::beforeSyncingLeds() {
   for (uint8_t i = 0; i < MAX_SLOTS; i++) {
     if (indicators_[i].active) {
       uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
-      
+
       // Check if we're still in the delay period
       if (elapsed < indicators_[i].delay_ms) {
         // During delay, don't update the LED at all - let other indicators use it
         continue;
       }
-      
+
       // Adjust elapsed time to account for delay
       uint32_t effective_elapsed = elapsed - indicators_[i].delay_ms;
-      
+
       if (indicators_[i].duration_ms > 0 && effective_elapsed >= indicators_[i].duration_ms) {
-        bool was_global = indicators_[i].is_global;
-        KeyAddr expiring_led = indicators_[i].key_addr;
+        bool was_global       = indicators_[i].is_global;
+        KeyAddr expiring_led  = indicators_[i].key_addr;
         indicators_[i].active = false;
-        
+
         if (was_global) {
           // Global indicator expired - refresh all slots unless another indicator is using them
           for (uint8_t slot = 0; slot < num_indicator_slots; slot++) {
@@ -260,7 +260,7 @@ EventHandlerResult LEDIndicators::beforeSyncingLeds() {
             if (led_addr.isValid()) {
               bool another_indicator_waiting = false;
               for (uint8_t j = 0; j < MAX_SLOTS; j++) {
-                if (j != i && indicators_[j].active && 
+                if (j != i && indicators_[j].active &&
                     (indicators_[j].is_global || indicators_[j].key_addr == led_addr)) {
                   another_indicator_waiting = true;
                   break;
@@ -275,7 +275,7 @@ EventHandlerResult LEDIndicators::beforeSyncingLeds() {
           // Single LED indicator expired
           bool another_indicator_waiting = false;
           for (uint8_t j = 0; j < MAX_SLOTS; j++) {
-            if (j != i && indicators_[j].active && 
+            if (j != i && indicators_[j].active &&
                 (indicators_[j].is_global || indicators_[j].key_addr == expiring_led)) {
               another_indicator_waiting = true;
               break;
@@ -305,7 +305,7 @@ void LEDIndicators::updateIndicator(uint8_t index) {
 
   // Update the LED(s) with the computed color
   cRGB color = computeCurrentColor(indicator);
-  
+
   if (indicator.is_global) {
     // Global indicator - update all configured slots
     for (uint8_t i = 0; i < num_indicator_slots; i++) {
@@ -323,7 +323,7 @@ void LEDIndicators::updateIndicator(uint8_t index) {
 // Compute the current color for an indicator based on its effect
 cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
   uint32_t elapsed = Runtime.millisAtCycleStart() - indicator.start_time;
-  
+
   // Account for delay - effects start after the delay period
   // Note: This should never be called during delay period due to checks in beforeSyncingLeds
   if (elapsed < indicator.delay_ms) {
@@ -376,8 +376,8 @@ cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
   case IndicatorEffect::Pulse: {
     // Each pulse cycle lasts 400ms (200ms on, 200ms off)
     uint32_t cycle_time = 400;
-    uint32_t cycle_pos = elapsed % cycle_time;
-    
+    uint32_t cycle_pos  = elapsed % cycle_time;
+
     if (cycle_pos < 200) {
       // Pulse on for 200ms
       return indicator.color1;
@@ -467,34 +467,34 @@ bool LEDIndicators::hasActiveIndicatorForLED(KeyAddr led_addr) {
 EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_id, HostConnectionStatus status) {
   // Handle USB connections (device_id 0) specially
   if (device_id == 0) {
-    
+
     switch (status) {
     case HostConnectionStatus::Connecting:
       // USB power detected but no data connection - pulse orange 3 times on all LEDs
       clearAllIndicators();
       showGlobalIndicator(IndicatorEffect::Pulse,
-                         color_orange,
-                         color_off,
-                         1200,  // 3 pulses at 400ms each
-                         3);
+                          color_orange,
+                          color_off,
+                          1200,  // 3 pulses at 400ms each
+                          3);
       break;
     case HostConnectionStatus::Connected:
       // USB data connection established - fade up green on all LEDs
       clearAllIndicators();
       showGlobalIndicator(IndicatorEffect::Grow,
-                         color_green,
-                         color_off,
-                         1000,  // 1 second duration
-                         1);
+                          color_green,
+                          color_off,
+                          1000,  // 1 second duration
+                          1);
       break;
     case HostConnectionStatus::Disconnected:
       // USB fully disconnected - show orange shrink effect on all LEDs
       clearAllIndicators();
       showGlobalIndicator(IndicatorEffect::Shrink,
-                         color_orange,
-                         color_off,
-                         1000,  // 1 second duration
-                         1);    // 1 cycle
+                          color_orange,
+                          color_off,
+                          1000,  // 1 second duration
+                          1);    // 1 cycle
       break;
     default:
       // Other USB states don't need special indicators
@@ -505,19 +505,19 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
 
   // For BLE devices (device_id 1-4), adjust to zero-indexed slot
   uint8_t slot = device_id - 1;
-  
+
   // If there's a global indicator running, delay until it's done
   uint16_t delay_ms = getGlobalIndicatorRemainingTime();
-  
+
   switch (status) {
   case HostConnectionStatus::Connecting:
     showIndicatorWithDelay(getLEDForSlot(slot),
                            IndicatorEffect::Blink,
                            color_blue,
                            color_off,
-                           30000,  // 30 second duration
+                           30000,     // 30 second duration
                            delay_ms,  // Only delay if USB indicators are active
-                           10);    // 10 cycles
+                           10);       // 10 cycles
     break;
   case HostConnectionStatus::Connected:
     // Clear any existing indicators on this slot (like Advertising) before showing Connected
@@ -526,9 +526,9 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            IndicatorEffect::Grow,
                            color_blue,
                            color_off,
-                           5000,  // 5 second duration
+                           5000,      // 5 second duration
                            delay_ms,  // Only delay if USB indicators are active
-                           1);    // 1 cycle
+                           1);        // 1 cycle
     break;
   case HostConnectionStatus::PairingFailed:
     showIndicator(getLEDForSlot(slot),
@@ -543,9 +543,9 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            IndicatorEffect::Shrink,
                            color_blue,
                            color_off,
-                           5000,  // 5 second duration
+                           5000,      // 5 second duration
                            delay_ms,  // Only delay if USB indicators are active
-                           1);    // 1 cycle
+                           1);        // 1 cycle
     break;
   case HostConnectionStatus::PairingSuccess:
     showIndicator(getLEDForSlot(slot),
@@ -562,9 +562,9 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            IndicatorEffect::Grow,
                            color_blue,
                            color_off,
-                           2000,  // 2 second duration
+                           2000,      // 2 second duration
                            delay_ms,  // Only delay if USB indicators are active
-                           1);    // 1 cycle
+                           1);        // 1 cycle
     break;
   case HostConnectionStatus::DeviceUnselected:
     clearIndicator(getLEDForSlot(slot));
@@ -576,9 +576,9 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                            IndicatorEffect::Blink,
                            color_blue,
                            color_off,
-                           30000,  // 30 second duration
+                           30000,     // 30 second duration
                            delay_ms,  // Only delay if USB indicators are active
-                           10);    // 10 cycles
+                           10);       // 10 cycles
     break;
   default:
     break;

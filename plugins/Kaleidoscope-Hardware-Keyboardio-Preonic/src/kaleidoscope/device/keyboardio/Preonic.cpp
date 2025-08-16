@@ -525,7 +525,7 @@ void Preonic::setupUSBWakeForSleep() {
   // Use SoftDevice API to enable VBUS detection for wake
   // This generates NRF_EVT_POWER_USB_DETECTED events that can be handled via sd_evt_get()
   uint32_t result = sd_power_usbdetected_enable(true);
-  
+
   // If SoftDevice call fails, continue without USB wake (key/encoder wake still works)
   if (result != NRF_SUCCESS) {
     // Graceful fallback - system will still wake on keys/encoders
