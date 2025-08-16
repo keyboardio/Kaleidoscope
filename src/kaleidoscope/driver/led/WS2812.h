@@ -49,13 +49,19 @@ class WS2812 : public Base<_LEDDriverProps> {
   }
 
   void setup() {
+    cRGB rgb;
+    rgb.r = 0;
+    rgb.g = 0;
+    rgb.b = 0;
     pixels.begin();
+
+    for (auto i=0; i<= _LEDDriverProps::led_count; i++) {
+	setCrgbAt(i,	rgb);
+	}	
+    pixels.setBrightness(0);  // Set initial brightness
     pixels.show();             // Initialize all pixels to 'off'
     pixels.setBrightness(50);  // Set initial brightness
 
-    for (int i = 0; i < _LEDDriverProps::led_count; i++) {
-      pixels.setPixelColor(i, pixels.Color(0, 150, 150));
-    }
     modified_ = true;
 
     syncLeds();
@@ -69,6 +75,7 @@ class WS2812 : public Base<_LEDDriverProps> {
       // glowing a dull blue when other LEDs are lit and that one isn't
       // Setting the output mode as output and unconnected when not in use appears to be a better fix.
       pinMode(_LEDDriverProps::pin, OUTPUT);
+      delay(5);
       pixels.show();
 
       modified_ = false;

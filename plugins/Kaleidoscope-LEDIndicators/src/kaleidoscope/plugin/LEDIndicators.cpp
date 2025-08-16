@@ -433,6 +433,36 @@ uint16_t LEDIndicators::getGlobalIndicatorRemainingTime() {
   return max_remaining;
 }
 
+// Check if a specific LED has an active indicator
+bool LEDIndicators::hasActiveIndicatorForLED(KeyAddr led_addr) {
+  for (uint8_t i = 0; i < MAX_SLOTS; i++) {
+    if (indicators_[i].active) {
+      // Check if it's a global indicator (affects all LEDs)
+      if (indicators_[i].is_global) {
+        // Check if this LED is one of our configured slots
+        for (uint8_t slot = 0; slot < num_indicator_slots; slot++) {
+          if (getLEDForSlot(slot) == led_addr) {
+            // This LED is affected by the global indicator
+            // Check if the indicator is actually running (not in delay)
+            uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
+            if (elapsed >= indicators_[i].delay_ms) {
+              return true;
+            }
+          }
+        }
+      } else if (indicators_[i].key_addr == led_addr) {
+        // Direct indicator for this LED
+        // Check if it's actually running (not in delay)
+        uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
+        if (elapsed >= indicators_[i].delay_ms) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 // Handle connection status changes
 EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_id, HostConnectionStatus status) {
   // Handle USB connections (device_id 0) specially

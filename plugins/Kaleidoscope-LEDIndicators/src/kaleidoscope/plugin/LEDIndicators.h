@@ -158,6 +158,12 @@ class LEDIndicators : public kaleidoscope::Plugin {
    * @return The maximum remaining time in milliseconds, or 0 if no global indicators are active
    */
   uint16_t getGlobalIndicatorRemainingTime();
+  
+  /** @brief Check if a specific LED has an active indicator
+   * @param led_addr The LED to check
+   * @return true if the LED has an active indicator (including global indicators)
+   */
+  bool hasActiveIndicatorForLED(KeyAddr led_addr);
 
   /** @brief Get the LED index for a given slot
    * @param slot The slot number
