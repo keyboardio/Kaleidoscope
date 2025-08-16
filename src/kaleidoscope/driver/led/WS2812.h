@@ -55,10 +55,10 @@ class WS2812 : public Base<_LEDDriverProps> {
     rgb.b = 0;
     pixels.begin();
 
-    for (auto i=0; i<= _LEDDriverProps::led_count; i++) {
-	setCrgbAt(i,	rgb);
-	}	
-    pixels.setBrightness(0);  // Set initial brightness
+    for (auto i = 0; i <= _LEDDriverProps::led_count; i++) {
+      setCrgbAt(i, rgb);
+    }
+    pixels.setBrightness(0);   // Set initial brightness
     pixels.show();             // Initialize all pixels to 'off'
     pixels.setBrightness(50);  // Set initial brightness
 

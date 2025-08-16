@@ -67,11 +67,11 @@ class USBAutoSwitcher : public kaleidoscope::Plugin {
   EventHandlerResult onHostConnectionStatusChanged(uint8_t device_id, HostConnectionStatus status);
 
  private:
-  static uint8_t fallback_ble_device_;      // Last manually selected BLE device (1-4)
-  static uint32_t startup_time_;            // When the plugin was initialized
-  static uint16_t startup_delay_ms_;        // Delay before auto-switching starts
-  static bool startup_switch_done_;         // Prevent multiple startup switches
-  static uint8_t current_host_mode_;        // Track current connection mode
+  static uint8_t fallback_ble_device_;  // Last manually selected BLE device (1-4)
+  static uint32_t startup_time_;        // When the plugin was initialized
+  static uint16_t startup_delay_ms_;    // Delay before auto-switching starts
+  static bool startup_switch_done_;     // Prevent multiple startup switches
+  static uint8_t current_host_mode_;    // Track current connection mode
 
   /**
    * @brief Check if we're still within the startup delay period

@@ -18,7 +18,7 @@ extern "C" {
 void tud_mount_cb(void) {
   // Notify the nRF52840 driver that USB data connection is established
   kaleidoscope::driver::mcu::nRF52840<kaleidoscope::driver::mcu::nRF52840Props>::handleUSBMount();
-  
+
   // Broadcast host connection status change event for USB device
   kaleidoscope::driver::mcu::nRF52840<kaleidoscope::driver::mcu::nRF52840Props>::broadcastUSBState(true);
 }
@@ -30,7 +30,7 @@ void tud_mount_cb(void) {
 void tud_umount_cb(void) {
   // Notify the nRF52840 driver that USB data connection is lost
   kaleidoscope::driver::mcu::nRF52840<kaleidoscope::driver::mcu::nRF52840Props>::handleUSBUnmount();
-  
+
   // Broadcast host connection status change event for USB device
   kaleidoscope::driver::mcu::nRF52840<kaleidoscope::driver::mcu::nRF52840Props>::broadcastUSBState(false);
 }
@@ -42,7 +42,7 @@ void tud_umount_cb(void) {
 void tud_suspend_cb(bool remote_wakeup_en) {
   // USB is still connected but host has entered suspend state
   // Device should reduce power consumption
-  (void)remote_wakeup_en; // Unused parameter
+  (void)remote_wakeup_en;  // Unused parameter
 }
 
 /**
@@ -53,7 +53,7 @@ void tud_resume_cb(void) {
   // Normal operation can continue
 }
 
-} // extern "C"
+}  // extern "C"
 
 namespace kaleidoscope {
 namespace driver {
@@ -81,14 +81,14 @@ void nRF52840<_Props>::checkUSBPowerOnlyStatus() {
   if (initial_usb_check_done_) {
     return;  // Already checked
   }
-  
+
   // Delay check slightly to let USB initialization complete
   if ((millis() - startup_time_) < 2000) {
     return;  // Too early to check reliably
   }
-  
+
   initial_usb_check_done_ = true;
-  
+
   // Check if we have USB power but no data connection
   if (USBPowerDetected() && !USBDataConnected()) {
     // USB power only (no data) detected at startup
@@ -97,12 +97,12 @@ void nRF52840<_Props>::checkUSBPowerOnlyStatus() {
   }
 }
 
-// Explicit template instantiation  
+// Explicit template instantiation
 template void nRF52840<nRF52840Props>::broadcastUSBState(bool);
 template void nRF52840<nRF52840Props>::checkUSBPowerOnlyStatus();
 
-} // namespace mcu
-} // namespace driver
-} // namespace kaleidoscope
+}  // namespace mcu
+}  // namespace driver
+}  // namespace kaleidoscope
 
-#endif // ARDUINO_ARCH_NRF52
+#endif  // ARDUINO_ARCH_NRF52

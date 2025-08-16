@@ -289,7 +289,7 @@ struct PreonicProps : public kaleidoscope::device::BaseProps {
 class Preonic : public kaleidoscope::device::Base<PreonicProps> {
  private:
   // Deep sleep timers
-  static uint32_t last_activity_time_;                     // Used for deep sleep
+  static uint32_t last_activity_time_;                      // Used for deep sleep
   static constexpr uint32_t DEEP_SLEEP_TIMEOUT_MS = 10000;  // Enter deep sleep after 10s
   static volatile bool input_event_pending_;
   static uint32_t last_battery_update_;                        // Last battery level update time
@@ -432,7 +432,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
    * the standard GPIOTE interrupt handler as it's already used by the Arduino
    * core. Instead, we use PPI to route PORT events to a separate interrupt.
    */
-  
+
   /**
    * @brief Configure USB VBUS detection for wake-from-sleep
    * @details Uses SoftDevice API to enable hardware VBUS detection
@@ -813,7 +813,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
  public:
   Preonic() {
   }
-  
+
   /**
    * @brief Handle USB connection status changes for wake-from-sleep
    * @details This provides a safe way to detect USB connections that can wake the device
@@ -822,15 +822,15 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Device 0 is USB - wake handling for data connections
     if (device_id == 0) {
       switch (status) {
-        case kaleidoscope::HostConnectionStatus::Connected:
-          // USB data connection established - signal activity
-          input_event_pending_ = true;
-          last_activity_time_ = millis();
-          break;
-        case kaleidoscope::HostConnectionStatus::Connecting:
-        case kaleidoscope::HostConnectionStatus::Disconnected:
-          // These are handled at the power event level
-          break;
+      case kaleidoscope::HostConnectionStatus::Connected:
+        // USB data connection established - signal activity
+        input_event_pending_ = true;
+        last_activity_time_  = millis();
+        break;
+      case kaleidoscope::HostConnectionStatus::Connecting:
+      case kaleidoscope::HostConnectionStatus::Disconnected:
+        // These are handled at the power event level
+        break;
       }
     }
     return kaleidoscope::EventHandlerResult::OK;
@@ -842,7 +842,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
     // Handle speaker updates
     // TODO(jesse): move this into a hook
     updateSpeaker();
-    
+
     // Check for USB power-only state on startup (delegated to MCU driver)
     mcu().checkUSBPowerOnlyStatus();
 
@@ -875,8 +875,7 @@ class Preonic : public kaleidoscope::device::Base<PreonicProps> {
       input_event_pending_ = false;
       last_activity_time_  = now;  // Update activity time on GPIOTE event
     }
-    
-    
+
 
     if (shouldEnterDeepSleep()) {
       // Check if we should enter deep sleep
