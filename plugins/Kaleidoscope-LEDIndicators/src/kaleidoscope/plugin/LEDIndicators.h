@@ -136,6 +136,13 @@ class LEDIndicators : public kaleidoscope::Plugin {
   /** @brief Clear all active indicators */
   void clearAllIndicators();
 
+  /** @brief Check if any indicators are currently active on the given slot range
+   * @param start_slot The first slot to check
+   * @param end_slot The last slot to check (inclusive)
+   * @return true if any indicators are active in the specified range
+   */
+  bool hasActiveIndicators(uint8_t start_slot, uint8_t end_slot);
+
   /** @brief Get the LED index for a given slot
    * @param slot The slot number
    * @return The LED index, or KeyAddr::none() if slot is invalid
