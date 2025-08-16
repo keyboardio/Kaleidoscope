@@ -97,9 +97,8 @@ EventHandlerResult USBAutoSwitcher::onHostConnectionStatusChanged(uint8_t device
       // Other USB states don't trigger switching
       break;
     }
-  }
-  // Handle BLE device connection events (device_id 1-4)
-  else if (device_id >= 1 && device_id <= 4) {
+  } else if (device_id >= 1 && device_id <= 4) {
+    // Handle BLE device connection events (device_id 1-4)
     switch (status) {
     case HostConnectionStatus::Connected:
     case HostConnectionStatus::DeviceSelected:
