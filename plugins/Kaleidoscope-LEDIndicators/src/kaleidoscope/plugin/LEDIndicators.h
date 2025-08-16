@@ -111,6 +111,19 @@ class LEDIndicators : public kaleidoscope::Plugin {
                      uint16_t duration_ms   = 0,
                      uint16_t effect_cycles = 0);
   
+  /** @brief Show a global indicator that affects all configured slots
+   * @param effect The type of visual effect to show
+   * @param color1 Primary color for the effect
+   * @param color2 Secondary color for effects that use two colors
+   * @param duration_ms How long to show the indicator (0 for indefinite)
+   * @param effect_cycles Number of times to repeat the effect
+   */
+  void showGlobalIndicator(IndicatorEffect effect,
+                           cRGB color1,
+                           cRGB color2,
+                           uint16_t duration_ms,
+                           uint16_t effect_cycles = 0);
+  
   /** @brief Show a temporary indicator with delay and duration
    * @param key_addr The LED index to control
    * @param effect The type of visual effect to show
@@ -136,12 +149,15 @@ class LEDIndicators : public kaleidoscope::Plugin {
   /** @brief Clear all active indicators */
   void clearAllIndicators();
 
-  /** @brief Check if any indicators are currently active on the given slot range
-   * @param start_slot The first slot to check
-   * @param end_slot The last slot to check (inclusive)
-   * @return true if any indicators are active in the specified range
+  /** @brief Check if any global indicators are currently active
+   * @return true if any global indicators are active and running
    */
-  bool hasActiveIndicators(uint8_t start_slot, uint8_t end_slot);
+  bool hasActiveGlobalIndicator();
+  
+  /** @brief Get the remaining duration of any active global indicator
+   * @return The maximum remaining time in milliseconds, or 0 if no global indicators are active
+   */
+  uint16_t getGlobalIndicatorRemainingTime();
 
   /** @brief Get the LED index for a given slot
    * @param slot The slot number
@@ -189,6 +205,7 @@ class LEDIndicators : public kaleidoscope::Plugin {
     uint16_t effect_cycles;
     uint32_t last_update;
     uint16_t current_cycle;
+    bool is_global = false;  // If true, affects all indicator slots
   };
 
   void updateIndicator(uint8_t index);
