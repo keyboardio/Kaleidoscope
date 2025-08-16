@@ -108,9 +108,57 @@ void LEDIndicators::showIndicator(KeyAddr led_addr,
   indicators_[slot].effect_cycles = effect_cycles;
   indicators_[slot].current_cycle = 0;
   indicators_[slot].last_update   = Runtime.millisAtCycleStart();
+  indicators_[slot].is_global     = false;  // Not a global indicator
 
   // Immediately update the indicator
   updateIndicator(slot);
+}
+
+// Show a global indicator that affects all configured slots
+void LEDIndicators::showGlobalIndicator(IndicatorEffect effect,
+                                        cRGB color1,
+                                        cRGB color2,
+                                        uint16_t duration_ms,
+                                        uint16_t effect_cycles) {
+  if (!Runtime.has_leds) {
+    return;
+  }
+
+  // Find an available indicator slot
+  uint8_t slot = 0xFF;
+  for (uint8_t i = 0; i < MAX_SLOTS; i++) {
+    if (!indicators_[i].active) {
+      slot = i;
+      break;
+    }
+  }
+
+  if (slot == 0xFF) {
+    return;
+  }
+
+  // Set up the global indicator
+  indicators_[slot].active        = true;
+  indicators_[slot].key_addr      = KeyAddr::none();  // Not tied to a specific LED
+  indicators_[slot].effect        = effect;
+  indicators_[slot].color1        = color1;
+  indicators_[slot].color2        = color2;
+  indicators_[slot].start_time    = Runtime.millisAtCycleStart();
+  indicators_[slot].duration_ms   = duration_ms;
+  indicators_[slot].delay_ms      = 0;  // No delay for global indicators
+  indicators_[slot].effect_cycles = effect_cycles;
+  indicators_[slot].current_cycle = 0;
+  indicators_[slot].last_update   = Runtime.millisAtCycleStart();
+  indicators_[slot].is_global     = true;  // This is a global indicator
+
+  // Immediately update all LEDs
+  for (uint8_t i = 0; i < num_indicator_slots; i++) {
+    KeyAddr led_addr = getLEDForSlot(i);
+    if (led_addr.isValid()) {
+      cRGB color = computeCurrentColor(indicators_[slot]);
+      ::LEDControl.setCrgbAt(led_addr, color);
+    }
+  }
 }
 
 // Show a temporary indicator with delay
@@ -154,6 +202,7 @@ void LEDIndicators::showIndicatorWithDelay(KeyAddr led_addr,
   indicators_[slot].effect_cycles = effect_cycles;
   indicators_[slot].current_cycle = 0;
   indicators_[slot].last_update   = Runtime.millisAtCycleStart();
+  indicators_[slot].is_global     = false;  // Not a global indicator
 }
 
 // Clear a specific indicator
@@ -200,8 +249,42 @@ EventHandlerResult LEDIndicators::beforeSyncingLeds() {
       uint32_t effective_elapsed = elapsed - indicators_[i].delay_ms;
       
       if (indicators_[i].duration_ms > 0 && effective_elapsed >= indicators_[i].duration_ms) {
+        bool was_global = indicators_[i].is_global;
+        KeyAddr expiring_led = indicators_[i].key_addr;
         indicators_[i].active = false;
-        ::LEDControl.refreshAt(indicators_[i].key_addr);
+        
+        if (was_global) {
+          // Global indicator expired - refresh all slots unless another indicator is using them
+          for (uint8_t slot = 0; slot < num_indicator_slots; slot++) {
+            KeyAddr led_addr = getLEDForSlot(slot);
+            if (led_addr.isValid()) {
+              bool another_indicator_waiting = false;
+              for (uint8_t j = 0; j < MAX_SLOTS; j++) {
+                if (j != i && indicators_[j].active && 
+                    (indicators_[j].is_global || indicators_[j].key_addr == led_addr)) {
+                  another_indicator_waiting = true;
+                  break;
+                }
+              }
+              if (!another_indicator_waiting) {
+                ::LEDControl.refreshAt(led_addr);
+              }
+            }
+          }
+        } else {
+          // Single LED indicator expired
+          bool another_indicator_waiting = false;
+          for (uint8_t j = 0; j < MAX_SLOTS; j++) {
+            if (j != i && indicators_[j].active && 
+                (indicators_[j].is_global || indicators_[j].key_addr == expiring_led)) {
+              another_indicator_waiting = true;
+              break;
+            }
+          }
+          if (!another_indicator_waiting) {
+            ::LEDControl.refreshAt(expiring_led);
+          }
+        }
       } else {
         updateIndicator(i);
       }
@@ -220,9 +303,21 @@ void LEDIndicators::updateIndicator(uint8_t index) {
   if (!indicator.active)
     return;
 
-  // Update the LED with the computed color
+  // Update the LED(s) with the computed color
   cRGB color = computeCurrentColor(indicator);
-  ::LEDControl.setCrgbAt(indicator.key_addr, color);
+  
+  if (indicator.is_global) {
+    // Global indicator - update all configured slots
+    for (uint8_t i = 0; i < num_indicator_slots; i++) {
+      KeyAddr led_addr = getLEDForSlot(i);
+      if (led_addr.isValid()) {
+        ::LEDControl.setCrgbAt(led_addr, color);
+      }
+    }
+  } else {
+    // Single LED indicator
+    ::LEDControl.setCrgbAt(indicator.key_addr, color);
+  }
 }
 
 // Compute the current color for an indicator based on its effect
@@ -230,8 +325,11 @@ cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
   uint32_t elapsed = Runtime.millisAtCycleStart() - indicator.start_time;
   
   // Account for delay - effects start after the delay period
+  // Note: This should never be called during delay period due to checks in beforeSyncingLeds
   if (elapsed < indicator.delay_ms) {
-    return color_off;  // Don't show anything during delay
+    // This shouldn't happen, but if it does, return the current LED color unchanged
+    // We should not be updating the LED during delay period
+    return ::LEDControl.getCrgbAt(indicator.key_addr);
   }
   elapsed -= indicator.delay_ms;
 
@@ -294,19 +392,45 @@ cRGB LEDIndicators::computeCurrentColor(const Indicator &indicator) {
   }
 }
 
-// Check if any indicators are currently active on the given LEDs
-bool LEDIndicators::hasActiveIndicators(uint8_t start_slot, uint8_t end_slot) {
+// Check if any global indicators are currently active
+bool LEDIndicators::hasActiveGlobalIndicator() {
   for (uint8_t i = 0; i < MAX_SLOTS; i++) {
-    if (indicators_[i].active) {
-      // Check if this indicator's LED is in the range we're checking
-      for (uint8_t slot = start_slot; slot <= end_slot && slot < num_indicator_slots; slot++) {
-        if (indicators_[i].key_addr == getLEDForSlot(slot)) {
-          return true;
-        }
+    if (indicators_[i].active && indicators_[i].is_global) {
+      // Check if it's actually running (not still in delay period)
+      uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
+      if (elapsed >= indicators_[i].delay_ms) {
+        return true;
       }
     }
   }
   return false;
+}
+
+// Get the remaining duration of any active global indicator
+uint16_t LEDIndicators::getGlobalIndicatorRemainingTime() {
+  uint16_t max_remaining = 0;
+  for (uint8_t i = 0; i < MAX_SLOTS; i++) {
+    if (indicators_[i].active && indicators_[i].is_global && indicators_[i].duration_ms > 0) {
+      uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
+      if (elapsed < indicators_[i].delay_ms) {
+        // Still in delay period
+        uint16_t remaining = indicators_[i].duration_ms + (indicators_[i].delay_ms - elapsed);
+        if (remaining > max_remaining) {
+          max_remaining = remaining;
+        }
+      } else {
+        // Already running
+        uint32_t effective_elapsed = elapsed - indicators_[i].delay_ms;
+        if (effective_elapsed < indicators_[i].duration_ms) {
+          uint16_t remaining = indicators_[i].duration_ms - effective_elapsed;
+          if (remaining > max_remaining) {
+            max_remaining = remaining;
+          }
+        }
+      }
+    }
+  }
+  return max_remaining;
 }
 
 // Handle connection status changes
@@ -317,61 +441,30 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
     switch (status) {
     case HostConnectionStatus::Connecting:
       // USB power detected but no data connection - pulse orange 3 times on all LEDs
-      for (uint8_t i = 0; i < num_indicator_slots; i++) {
-        KeyAddr led_addr = getLEDForSlot(i);
-        if (led_addr.isValid()) {
-          showIndicator(led_addr,
-                        IndicatorEffect::Pulse,
-                        color_orange,
-                        color_off,
-                        1200,  // 3 pulses at 400ms each
-                        3);
-        }
-      }
+      clearAllIndicators();
+      showGlobalIndicator(IndicatorEffect::Pulse,
+                         color_orange,
+                         color_off,
+                         1200,  // 3 pulses at 400ms each
+                         3);
       break;
     case HostConnectionStatus::Connected:
       // USB data connection established - fade up green on all LEDs
-      // First clear any existing indicators to ensure all LEDs show green
-      for (uint8_t i = 0; i < num_indicator_slots; i++) {
-        KeyAddr led_addr = getLEDForSlot(i);
-        if (led_addr.isValid()) {
-          clearIndicator(led_addr);
-        }
-      }
-      // Now show green on all LEDs
-      for (uint8_t i = 0; i < num_indicator_slots; i++) {
-        KeyAddr led_addr = getLEDForSlot(i);
-        if (led_addr.isValid()) {
-          showIndicator(led_addr,
-                        IndicatorEffect::Grow,
-                        color_green,
-                        color_off,
-                        1000,  // 1 second duration
-                        1);
-        }
-      }
+      clearAllIndicators();
+      showGlobalIndicator(IndicatorEffect::Grow,
+                         color_green,
+                         color_off,
+                         1000,  // 1 second duration
+                         1);
       break;
     case HostConnectionStatus::Disconnected:
       // USB fully disconnected - show orange shrink effect on all LEDs
-      // First clear any existing indicators
-      for (uint8_t i = 0; i < num_indicator_slots; i++) {
-        KeyAddr led_addr = getLEDForSlot(i);
-        if (led_addr.isValid()) {
-          clearIndicator(led_addr);
-        }
-      }
-      // Now show orange on all LEDs (less alarming than red)
-      for (uint8_t i = 0; i < num_indicator_slots; i++) {
-        KeyAddr led_addr = getLEDForSlot(i);
-        if (led_addr.isValid()) {
-          showIndicator(led_addr,
-                        IndicatorEffect::Shrink,
-                        color_orange,
-                        color_off,
-                        1000,  // 1 second duration
-                        1);    // 1 cycle
-        }
-      }
+      clearAllIndicators();
+      showGlobalIndicator(IndicatorEffect::Shrink,
+                         color_orange,
+                         color_off,
+                         1000,  // 1 second duration
+                         1);    // 1 cycle
       break;
     default:
       // Other USB states don't need special indicators
@@ -383,9 +476,8 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
   // For BLE devices (device_id 1-4), adjust to zero-indexed slot
   uint8_t slot = device_id - 1;
   
-  // Check if there are any active USB indicators that we need to wait for
-  // USB indicators use all slots, so check all of them
-  uint16_t delay_ms = hasActiveIndicators(0, num_indicator_slots - 1) ? 1500 : 0;
+  // If there's a global indicator running, delay until it's done
+  uint16_t delay_ms = getGlobalIndicatorRemainingTime();
   
   switch (status) {
   case HostConnectionStatus::Connecting:
