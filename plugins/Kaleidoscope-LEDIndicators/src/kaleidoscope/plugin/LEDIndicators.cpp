@@ -634,13 +634,17 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
                   1);     // 1 cycle
     break;
   case HostConnectionStatus::Disconnected:
-    showIndicatorWithDelay(getLEDForSlot(slot),
-                           IndicatorEffect::Shrink,
-                           color_blue,
-                           color_off,
-                           5000,      // 5 second duration
-                           delay_ms,  // Only delay if USB indicators are active
-                           1);        // 1 cycle
+    // Use a dimmer blue that fades to off over a longer duration
+    {
+      cRGB dim_blue = {0, 0, 76};  // ~30% brightness blue (76/255 ≈ 0.3)
+      showIndicatorWithDelay(getLEDForSlot(slot),
+                             IndicatorEffect::Shrink,
+                             dim_blue,
+                             color_off,
+                             8000,      // 8 second duration for longer fade
+                             delay_ms,  // Only delay if USB indicators are active
+                             1);        // 1 cycle
+    }
     break;
   case HostConnectionStatus::PairingSuccess:
     showIndicator(getLEDForSlot(slot),
