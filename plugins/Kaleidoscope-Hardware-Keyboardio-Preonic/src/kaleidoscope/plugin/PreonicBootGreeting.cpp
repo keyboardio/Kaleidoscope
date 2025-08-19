@@ -112,14 +112,14 @@ EventHandlerResult PreonicBootGreetingEffect::afterEachCycle() {
 
   uint16_t elapsed = Runtime.millisAtCycleStart() - start_time;
 
-  // Calculate overall brightness fade
+  // Calculate overall brightness fade (no flapping, just smooth fade in/hold/fade out)
   uint8_t brightness_scale = 255;
 
   if (elapsed < FADE_IN_DURATION) {
     // Fade in phase
     brightness_scale = (elapsed * 255U) / FADE_IN_DURATION;
   } else if (elapsed < FADE_IN_DURATION + FLAPPING_DURATION) {
-    // Full brightness phase
+    // Hold at full brightness phase
     brightness_scale = 255U;
   } else {
     // Fade out phase

@@ -41,9 +41,9 @@ class PreonicBootGreetingEffect : public kaleidoscope::Plugin {
  private:
   static bool done_;
   static uint16_t start_time;
-  static constexpr uint16_t FADE_IN_DURATION  = 1000;  // 1s fade in
-  static constexpr uint16_t FLAPPING_DURATION = 8000;  // 8s flapping
-  static constexpr uint16_t FADE_OUT_DURATION = 1000;  // 1s fade out
+  static constexpr uint16_t FADE_IN_DURATION  = 2000;  // 2s fade in
+  static constexpr uint16_t FLAPPING_DURATION = 1000;  // 1s hold at full brightness
+  static constexpr uint16_t FADE_OUT_DURATION = 2000;  // 2s fade out
   static constexpr uint16_t FLAP_CYCLE_MS     = 2000;  // 2000ms per flap cycle (0.5 flaps/sec)
 
   // LED indices for wings
