@@ -124,6 +124,21 @@ class LEDIndicators : public kaleidoscope::Plugin {
                            uint16_t duration_ms,
                            uint16_t effect_cycles = 0);
 
+  /** @brief Show a global indicator with delay and duration
+   * @param effect The type of visual effect to show
+   * @param color1 Primary color for the effect
+   * @param color2 Secondary color for effects that use two colors
+   * @param duration_ms How long to show the indicator (0 for indefinite)
+   * @param delay_ms How long to wait before showing the indicator
+   * @param effect_cycles Number of times to repeat the effect
+   */
+  void showGlobalIndicatorWithDelay(IndicatorEffect effect,
+                                    cRGB color1,
+                                    cRGB color2,
+                                    uint16_t duration_ms,
+                                    uint16_t delay_ms,
+                                    uint16_t effect_cycles = 0);
+
   /** @brief Show a temporary indicator with delay and duration
    * @param key_addr The LED index to control
    * @param effect The type of visual effect to show
@@ -158,6 +173,11 @@ class LEDIndicators : public kaleidoscope::Plugin {
    * @return The maximum remaining time in milliseconds, or 0 if no global indicators are active
    */
   uint16_t getGlobalIndicatorRemainingTime();
+
+  /** @brief Get the remaining duration of any active indicator (global or individual)
+   * @return The maximum remaining time in milliseconds, or 0 if no indicators are active
+   */
+  uint16_t getAnyIndicatorRemainingTime();
 
   /** @brief Check if a specific LED has an active indicator
    * @param led_addr The LED to check
