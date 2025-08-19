@@ -199,11 +199,11 @@ void LEDIndicators::showIndicatorWithDelay(KeyAddr led_addr,
 
 // Show a global indicator with delay
 void LEDIndicators::showGlobalIndicatorWithDelay(IndicatorEffect effect,
-                                                  cRGB color1,
-                                                  cRGB color2,
-                                                  uint16_t duration_ms,
-                                                  uint16_t delay_ms,
-                                                  uint16_t effect_cycles) {
+                                                 cRGB color1,
+                                                 cRGB color2,
+                                                 uint16_t duration_ms,
+                                                 uint16_t delay_ms,
+                                                 uint16_t effect_cycles) {
   if (!Runtime.has_leds) {
     return;
   }
@@ -583,17 +583,17 @@ EventHandlerResult LEDIndicators::onHostConnectionStatusChanged(uint8_t device_i
   // Check if we're still in boot greeting period (5 seconds)
   // During boot, delay all Bluetooth indicators
   uint16_t delay_ms = 0;
-  uint32_t uptime = Runtime.millisAtCycleStart();
+  uint32_t uptime   = Runtime.millisAtCycleStart();
   if (uptime < 5000) {
     delay_ms = 5000 - uptime;
   }
-  
+
   // Also wait for any active USB global indicators to complete
   // This ensures Bluetooth indicators don't interfere with USB disconnect/connect sequences
   for (uint8_t i = 0; i < MAX_SLOTS; i++) {
     if (indicators_[i].active && indicators_[i].is_global) {
       // This is a USB global indicator, wait for it to complete
-      uint32_t elapsed = Runtime.millisAtCycleStart() - indicators_[i].start_time;
+      uint32_t elapsed    = Runtime.millisAtCycleStart() - indicators_[i].start_time;
       uint32_t total_time = indicators_[i].delay_ms + indicators_[i].duration_ms;
       if (elapsed < total_time) {
         uint16_t remaining = total_time - elapsed;
