@@ -31,7 +31,7 @@ namespace speaker {
 
 class None : public kaleidoscope::driver::speaker::Base<BaseProps> {
  public:
-  void update() {}  // no speaker. no updates.
+  virtual void update() override {}  // no speaker. no updates.
 };
 
 }  // namespace speaker
