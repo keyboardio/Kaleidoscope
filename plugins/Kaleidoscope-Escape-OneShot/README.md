@@ -5,7 +5,12 @@ effect - or act as the normal `Esc` key if none are active, or if any of them
 are still held. For those times when one accidentally presses a one-shot key, or
 change their minds.
 
-Additionally, the special `Key_OneShotCancel` key will also count as a oneshot
+This plugin also modifies the behavior of `OneShot_ActiveStickyKey` 
+so that it acts like a toggle. Without holding any keys, pressing
+`OneShot_ActiveStickyKey` again will cancel any active sticky keys.
+This saves one from having to remember to deactivate each key individually.
+
+Additionally, the special `Key_OneShotCancel` key will always count as a oneshot
 cancel key, would one want a dedicated key for the purpose.
 
 ## Using the plugin
