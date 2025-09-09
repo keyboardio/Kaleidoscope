@@ -64,7 +64,7 @@
 #include "Kaleidoscope-USBAutoSwitcher.h"
 
 
-/** This 'enum' is a list of all the macros used by the Model 100's firmware
+/** This 'enum' is a list of all the macros used by the Preonic's firmware
   * The names aren't particularly important. What is important is that each
   * is unique.
   *
