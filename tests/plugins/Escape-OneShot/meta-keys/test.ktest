@@ -1,0 +1,34 @@
+VERSION 1
+
+KEYSWITCH KEY_A  0 0
+KEYSWITCH KEY_B  0 1
+KEYSWITCH OS_ASK 1 0  # OneShot_ActiveStickyKey 
+
+# ==============================================================================
+NAME EscapeOneShot cancel ActiveStickyKey
+
+RUN 4 ms
+PRESS KEY_A
+RUN 1 cycle
+EXPECT keyboard-report Key_A
+RUN 4 ms
+PRESS KEY_B
+RUN 1 cycle
+EXPECT keyboard-report Key_A Key_B
+RUN 4 ms
+PRESS OS_ASK
+RUN 4 ms
+RELEASE KEY_A
+RUN 4 ms
+RELEASE KEY_B
+RUN 4 ms
+RELEASE OS_ASK
+RUN 4 ms
+
+PRESS OS_ASK
+RUN 1 cycle
+EXPECT keyboard-report Key_B # Key_A gets cancelled first
+EXPECT keyboard-report empty # Report should now be empty
+RELEASE OS_ASK
+
+RUN 5 ms

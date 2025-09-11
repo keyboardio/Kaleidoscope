@@ -25,6 +25,7 @@
 #include <Kaleidoscope-Ranges.h>  // for OS_CANCEL
 #include <stdint.h>               // for uint16_t
 
+#include "kaleidoscope/KeyAddrBitfield.h"       // for KeyAddrBitfield
 #include "kaleidoscope/KeyEvent.h"              // for KeyEvent
 #include "kaleidoscope/event_handler_result.h"  // for EventHandlerResult
 #include "kaleidoscope/key_defs.h"              // for Key, Key_Escape
@@ -40,6 +41,7 @@ namespace plugin {
 
 class EscapeOneShot : public kaleidoscope::Plugin {
  public:
+  EventHandlerResult onKeyswitchEvent(KeyEvent &event);
   EventHandlerResult onKeyEvent(KeyEvent &event);
 
   void setCancelKey(Key cancel_key) {
@@ -56,6 +58,7 @@ class EscapeOneShot : public kaleidoscope::Plugin {
     Key cancel_oneshot_key;
   };
   Settings settings_ = {.cancel_oneshot_key = Key_Escape};
+  KeyAddrBitfield held_addrs_;
 };
 
 class EscapeOneShotConfig : public Plugin {
