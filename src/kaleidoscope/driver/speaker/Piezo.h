@@ -41,37 +41,37 @@ class Piezo : public Base<_SpeakerProps> {
   Piezo()
     : Base<_SpeakerProps>() {}
 
-  void setup() {
+  virtual void setup() override {
     if (_SpeakerProps::pin != -1) {
       pinMode(_SpeakerProps::pin, OUTPUT);
     }
   }
 
-  void playTone(unsigned int frequency, uint32_t duration) {
+  virtual void playTone(unsigned int frequency, uint32_t duration) override {
     if (_SpeakerProps::pin != -1) {
       ::tone(_SpeakerProps::pin, frequency, duration);
     }
   }
 
-  void playTone(unsigned int frequency) {
+  virtual void playTone(unsigned int frequency) override {
     if (_SpeakerProps::pin != -1) {
       ::tone(_SpeakerProps::pin, frequency);  // Arduino's tone() without duration plays until noTone()
     }
   }
 
-  void stopTone() {
+  virtual void stopTone() override {
     if (_SpeakerProps::pin != -1) {
       ::noTone(_SpeakerProps::pin);
     }
   }
 
-  bool isPlaying() {
+  virtual bool isPlaying() override {
     // This is a simplification, as Arduino's tone() function is blocking
     // In a real implementation, we'd need to track the playing state
     return false;
   }
 
-  void prepareForSleep() {
+  virtual void prepareForSleep() override {
     // Make sure to stop any active tones and shut down the speaker peripheral
     if (_SpeakerProps::pin != -1) {
       ::noTone(_SpeakerProps::pin);

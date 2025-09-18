@@ -22,6 +22,7 @@
 
 #pragma once
 #include <Arduino.h>
+#include <initializer_list>
 
 namespace kaleidoscope {
 namespace driver {
@@ -36,27 +37,32 @@ class Base {
  public:
   Base() {}
 
-  void setup() {}
-  void playTone(unsigned int frequency, uint32_t duration) {}
-  void playTone(unsigned int frequency) {
+  virtual void setup() {}
+  virtual void playTone(unsigned int frequency, uint32_t duration) {}
+  virtual void playTone(unsigned int frequency) {
     playTone(frequency, 0);  // 0 duration means play until stopped
   }
-  void stopTone() {}
-  bool isPlaying() { return false; }
+  virtual void stopTone() {}
+  virtual bool isPlaying() { return false; }
 
   void playTune(const uint16_t *notes, const uint16_t *durations, uint8_t length);
-  void stopTune();
-  void update();
+  void playTune(std::initializer_list<uint16_t> notes, std::initializer_list<uint16_t> durations) {
+    playTune(notes.begin(), durations.begin(), min(notes.size(), durations.size()));
+  }
+  virtual void stopTune();
+  virtual void update();
 
   // Prepare speaker for sleep - noop in base implementation
-  void prepareForSleep() {}
+  virtual void prepareForSleep() {}
 
  protected:
+  virtual void playNextTone();
+
   uint16_t current_notes_[_SpeakerProps::kMaxTuneLength];
   uint16_t current_durations_[_SpeakerProps::kMaxTuneLength];
-  uint8_t current_length_;
-  uint8_t current_index_;
-  uint32_t next_note_time_;
+  uint8_t current_length_ {0};
+  uint8_t current_index_ {0};
+  uint32_t next_note_time_ {0};
 };
 
 }  // namespace speaker
