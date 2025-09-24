@@ -30,12 +30,31 @@
 #include "kaleidoscope/key_defs.h"              // for Key, KEY_FLAGS, Key_NoKey, LockLayer
 #include "kaleidoscope/layers.h"                // for Layer, Layer_
 #include "kaleidoscope/plugin/LEDControl.h"     // for LEDControl
+#include <Kaleidoscope.h>                       // for Kaleidoscope
+#include <Kaleidoscope-FocusSerial.h>           // for Focus
 #include <Kaleidoscope-LED-Palette-Theme.h>     // for LEDPaletteTheme
+#include <Kaleidoscope-EEPROM-Settings.h>       // for EEPROMSettings
 
 namespace kaleidoscope {
 namespace plugin {
+uint16_t ColormapOverlay::overlays_base_;
+Overlay *ColormapOverlay::overlays_;
+uint8_t ColormapOverlay::overlay_count_;
+
 void ColormapOverlay::setup() {
   ::LEDPaletteTheme.reservePalette();
+
+  overlays_base_ = ::EEPROMSettings.requestSlice(max_overlays_ * sizeof(Overlay));
+
+  ::EEPROMSettings.seal();
+
+  if (!::EEPROMSettings.isValid()) {
+    // When settings are invalid, better to clean it all up to prevent unwanted things from happening
+    ::EEPROMSettings.invalidate();
+    return;
+  }
+
+  Kaleidoscope.storage().get(overlays_base_, overlays_);
 }
 
 bool ColormapOverlay::hasOverlay(KeyAddr k) {
@@ -43,7 +62,7 @@ bool ColormapOverlay::hasOverlay(KeyAddr k) {
   uint8_t layer_index = Layer.lookupActiveLayer(k);
 
   bool found_match_on_lower_layer = false;
-  for (uint8_t i{0}; i < overlay_count_; ++i) {
+  for (uint8_t i{0}; i < overlay_count_; i++) {
     Overlay overlay = overlays_[i];
     if (overlay.addr == k) {
       if ((overlay.layer == top_layer) || (overlay.layer == layer_wildcard)) {
@@ -79,6 +98,75 @@ void ColormapOverlay::setLEDOverlayColors() {
 EventHandlerResult ColormapOverlay::beforeSyncingLeds() {
   setLEDOverlayColors();
 
+  return EventHandlerResult::OK;
+}
+
+EventHandlerResult ColormapOverlay::onFocusEvent(const char *input) {
+  if (!Runtime.has_leds)
+    return EventHandlerResult::OK;
+
+  const char *cmd = PSTR("colormap.overlay");
+
+  if (::Focus.inputMatchesHelp(input))
+    return ::Focus.printHelp(cmd);
+
+  if (!::Focus.inputMatchesCommand(input, cmd))
+    return EventHandlerResult::OK;
+
+  if (::Focus.isEOL()) {
+    for (uint8_t layer = 0; layer < layer_count; layer++) {
+      for (uint8_t key_index_ = 0; key_index_ < Runtime.device().numKeys(); key_index_++) {
+        KeyAddr k = KeyAddr(key_index_);
+        for (uint8_t overlay_index{0}; overlay_index < overlay_count_; overlay_index++) {
+          Overlay overlay = overlays_[overlay_index];
+          if ((overlay.addr == k) && (overlay.layer == layer)) {
+            ::Focus.send(overlay.palette_index);
+          }
+        }
+        ::Focus.send(-1);
+      }
+    }
+    return EventHandlerResult::EVENT_CONSUMED;
+  }
+
+  overlays_      = nullptr;
+  overlay_count_ = 0;
+  uint16_t i     = 0;
+  while (!::Focus.isEOL() && (i < (uint16_t)Runtime.device().numKeys() * layer_count)) {
+    int8_t color_index_;
+
+    // Ref: plugins/Kaleidoscope-FocusSerial/src/kaleidoscope/plugin/FocusSerial.h
+    // -> No overload for signed integers
+    // Ref: src/kaleidoscope/device/Base.h
+    // -> parseInt() seems to support signed values?
+    ::Focus.read(color_index_);
+    if (color_index_ >= 0) {
+      uint8_t key_index_ = i % Runtime.device().numKeys();
+      uint8_t layer_     = (i - key_index_) / Runtime.device().numKeys();
+
+      overlays_[overlay_count_] = Overlay(layer_, KeyAddr(key_index_), color_index_);
+      overlay_count_++;
+
+      if (overlay_count_ >= max_overlays_) {
+        // TODO(anyone): For now we just break the loop. Once focus implements
+        // support for reporting back errors, this should report why we break
+        // the loop
+        break;
+      }
+    }
+
+    i++;
+  }
+  Runtime.storage().commit();
+
+  ::LEDControl.refreshAll();
+
+  return EventHandlerResult::EVENT_CONSUMED;
+}
+
+EventHandlerResult ColormapOverlay::onLayerChange() {
+  // Ensure that any LEDs previously controlled by this plugin get reset
+  ::LEDControl.refreshAll();
   return EventHandlerResult::OK;
 }
 
