@@ -136,6 +136,9 @@ class Base {
     int read() {
       return 0;
     }
+    size_t readBytes(char *buffer, size_t length) {
+      return 0;
+    }
   };
 
   NoOpSerial noop_serial_;
